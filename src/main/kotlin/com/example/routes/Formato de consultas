@@ -1,0 +1,57 @@
+
+CREAR CLIENTE:
+
+POST http://localhost:8080/clientes/crearCliente
+
+Content-Type: application/json
+
+{
+    "nombres": "Juan Pérez",
+    "celular": "12345678",
+    "correo": "juan.perez@example.com",
+    "contraseña": "secreta",
+    "foto": "url_de_la_foto",
+    "dui": "12345678-9"
+}
+
+------------------------------------------------------------------------------------------------------------------------
+
+OBTENER TODOS LOS CLIENTES
+
+GET http://localhost:8080/clientes/obtenerClientes
+
+------------------------------------------------------------------------------------------------------------------------
+
+OBTENER UN CLIENTE POR ID:
+
+GET http://localhost:8080/clientes/obtenerClienteId/idCliente
+
+------------------------------------------------------------------------------------------------------------------------
+
+ACTUALIZAR UN CLIENTE:
+
+PUT http://localhost:8080/clientes/actualizarCliente
+
+Content-Type: application/json
+
+{
+    "idCliente": "mBOclbt9wkyettRavfEZ",
+    "nombres": "Juan Actualizado",
+    "celular": "87654321",
+    "correo": "juan.actualizado@example.com",
+    "contraseña": "nueva_secreta",
+    "foto": "nueva_url_de_la_foto",
+    "dui": "98765432-1"
+}
+
+------------------------------------------------------------------------------------------------------------------------
+
+ELIMINAR UN CLIENTE:
+
+DELETE http://localhost:8080/clientes/eliminarCiente
+
+{
+    "idCliente": "Upkw67gVenYIpkjwyRkK"
+}
+
+

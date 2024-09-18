@@ -1,0 +1,8 @@
+openapi: "3.1.0"
+info:
+  title: "AppZervy_Server API"
+  description: "AppZervy_Server API"
+  version: "1.0.0"
+servers:
+- url: "https://AppZervy_Server"
+paths: {}

@@ -21,4 +21,16 @@ Zervy (Server) es el proyecto oficial para desarrollar el apartado de la api de 
 > [!WARNING]
 > Asegurate de seguir paso a paso el instructivo, de no ser asi, podria no funcionar la compilacion del proyecto
 
+<br>
+
+> ### Paso 1: Agregar clave privada
+Agregar la clave privada llamada "appzervy-firebase-adminsdk.json" a la zona donde se muestra en la imagen
+
+![Descripción de la captura](resources/Multimedia/CapturaClaveSecreta.png)
+
+<br>
+
+> ### Paso 2: Agregar clave privada
+
+
 

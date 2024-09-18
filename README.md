@@ -11,7 +11,7 @@ Zervy (Server) es el proyecto oficial para desarrollar el apartado de la api de 
 
 <img src="https://codersee.com/wp-content/uploads/2023/11/ktor_refresh_token.png" alt="Logo de GitHub" width="100"/>
 
-> ### Ktor
+> ### Firebase
 
 <img src="https://firebase.google.com/static/images/brand-guidelines/logo-vertical.png?hl=es-419" alt="Logo de GitHub" width="100"/>
 

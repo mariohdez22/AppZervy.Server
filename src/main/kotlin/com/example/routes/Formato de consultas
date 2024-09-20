@@ -6,12 +6,12 @@ POST http://localhost:8080/clientes/crearCliente
 Content-Type: application/json
 
 {
-    "nombres": "Juan Pérez",
-    "celular": "12345678",
-    "correo": "juan.perez@example.com",
-    "contraseña": "secreta",
-    "foto": "url_de_la_foto",
-    "dui": "12345678-9"
+    "nombresDto": "Mario Herrera",
+    "celularDto": "12345678",
+    "correoDto": "marioherrez@example.com",
+    "contraseñaDto": "secreta",
+    "fotoDto": "url_de_la_foto",
+    "duiDto": "12345678-8"
 }
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -35,13 +35,13 @@ PUT http://localhost:8080/clientes/actualizarCliente
 Content-Type: application/json
 
 {
-    "idCliente": "mBOclbt9wkyettRavfEZ",
-    "nombres": "Juan Actualizado",
-    "celular": "87654321",
-    "correo": "juan.actualizado@example.com",
-    "contraseña": "nueva_secreta",
-    "foto": "nueva_url_de_la_foto",
-    "dui": "98765432-1"
+    "idClienteDto": "JV413Ae3EGZ0tZOhj0RK",
+    "nombresDto": "Dennis Alexander",
+    "celularDto": "77777777",
+    "correoDto": "alegonz@example.com",
+    "contraseñaDto": "secreta",
+    "fotoDto": "url_de_la_foto",
+    "duiDto": "78774477-3"
 }
 
 ------------------------------------------------------------------------------------------------------------------------

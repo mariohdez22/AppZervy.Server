@@ -1,10 +1,10 @@
 package com.example.routes
 
-import com.example.models.Cliente
+import com.example.DTOs.ClienteDTO
+import com.example.Mappers.toCliente
+import com.example.Mappers.toDto
 import com.example.repository.interfaces.IClienteRepostory
-import com.google.firebase.cloud.FirestoreClient
 import io.ktor.http.*
-import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -16,16 +16,19 @@ fun Route.clienteRouting(_repository: IClienteRepostory) {
         // Crear un nuevo cliente
         post("/crearCliente") {
 
-            val cliente = call.receive<Cliente>()
+            val clienteDto = call.receive<ClienteDTO>()
+            val cliente = clienteDto.toCliente()
             val nuevoCliente = _repository.crearCliente(cliente)
-            call.respond(HttpStatusCode.Created, nuevoCliente)
+            val responseDto = nuevoCliente.toDto()
+            call.respond(HttpStatusCode.Created, responseDto)
         }
 
         // Obtener todos los clientes
         get("/obtenerClientes") {
 
             val obtenerClientes = _repository.obtenerClientes()
-            call.respond(obtenerClientes)
+            val responseDto = obtenerClientes.map { it.toDto() }
+            call.respond(responseDto)
         }
 
         // Obtener un cliente por ID
@@ -38,7 +41,8 @@ fun Route.clienteRouting(_repository: IClienteRepostory) {
                 val cliente = _repository.obtenerClientePorId(id)
 
                 if (cliente != null) {
-                    call.respond(cliente)
+                    val responseDto = cliente.toDto()
+                    call.respond(responseDto)
                 } else {
                     call.respond(HttpStatusCode.NotFound, "Cliente no encontrado")
                 }
@@ -51,15 +55,17 @@ fun Route.clienteRouting(_repository: IClienteRepostory) {
         // Actualizar un cliente
         put("/actualizarCliente") {
 
-            val cliente = call.receive<Cliente>()
+            val clienteDto = call.receive<ClienteDTO>()
 
-            val id = cliente.idCliente
+            val id = clienteDto.idClienteDto
 
             if (id != null) {
 
-                val actualizado = _repository.actualizarCliente(id, cliente)
+                val cliente = clienteDto.toCliente()
 
-                if (actualizado) {
+                val clienteEditado = _repository.actualizarCliente(id, cliente)
+
+                if (clienteEditado) {
                     call.respond(HttpStatusCode.OK, "Cliente actualizado")
                 } else {
                     call.respond(HttpStatusCode.NotFound, "Cliente no encontrado")
@@ -96,6 +102,7 @@ fun Route.clienteRouting(_repository: IClienteRepostory) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
+/*
 suspend fun obtenerClientes(call: ApplicationCall) {
 
     val db = FirestoreClient.getFirestore()
@@ -162,6 +169,6 @@ suspend fun eliminarCliente(call: ApplicationCall) {
         call.respond(HttpStatusCode.BadRequest, "ID de cliente no proporcionado")
     }
 }
-
+*/
 
 

@@ -1,7 +1,9 @@
 package com.example.firebase
 
 import com.example.repository.clases.ClienteRepository
+import com.example.repository.clases.DireccionRepository
 import com.example.repository.interfaces.IClienteRepostory
+import com.example.repository.interfaces.IDireccionRepository
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
@@ -29,6 +31,9 @@ val appModule = module {
         FirestoreClient.getFirestore()
     }
 
-    // Proveedor del ClienteService
+    // Proveedor de ClienteRepository
     single<IClienteRepostory> { ClienteRepository(get()) }
+
+    //Proveedor de DireccionRepository
+    single<IDireccionRepository> {DireccionRepository(get())}
 }

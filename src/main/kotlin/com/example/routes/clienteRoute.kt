@@ -222,10 +222,8 @@ fun Route.clienteRouting(_repository: IClienteRepostory) {
 
                 call.respond(HttpStatusCode.BadRequest, apiResponse)
             }
-
-
-
         }
+
     }
 }
 

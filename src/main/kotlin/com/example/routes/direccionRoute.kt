@@ -1,13 +1,10 @@
 package com.example.routes
 
 import com.example.ApiResponse.ApiResponse
-import com.example.DTOs.ClienteDTO
 import com.example.DTOs.DireccionDTO
-import com.example.Mappers.toCliente
 import com.example.Mappers.toDireccion
 import com.example.Mappers.toDto
 import com.example.repository.interfaces.IDireccionRepository
-import com.google.api.gax.retrying.DirectRetryingExecutor
 import io.ktor.http.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*

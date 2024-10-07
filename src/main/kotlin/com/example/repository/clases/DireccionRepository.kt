@@ -49,7 +49,7 @@ class DireccionRepository(private val firestore: Firestore) : IDireccionReposito
             .get()
             .await()
         return snapshot.documents.mapNotNull { document ->
-            document.toObject(Direccion::class.java)?.copy(idDireccion = document.id)
+            document.toObject(Direccion::class.java).copy(idDireccion = document.id)
         }
     }
 

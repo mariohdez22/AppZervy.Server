@@ -1,34 +1,34 @@
 package com.example.routes
 
 import com.example.ApiResponse.ApiResponse
-import com.example.DTOs.DireccionDTO
-import com.example.Mappers.toDireccion
+import com.example.DTOs.MetodosPagoDTO
 import com.example.Mappers.toDto
-import com.example.repository.interfaces.IDireccionRepository
+import com.example.Mappers.toMetodosPago
+import com.example.repository.interfaces.IMetodosPagoRepository
 import io.ktor.http.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.direccionRouting(_repository: IDireccionRepository){
+fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
 
-    route("/direccion"){
+    route("/metodosPago"){
 
         //--------------------------------------------------------------------------------------------------------------
 
-        post("/crearDireccion") {
+        post("/crearMetodoPago") {
 
-            val apiResponse = ApiResponse<DireccionDTO>()
+            val apiResponse = ApiResponse<MetodosPagoDTO>()
 
             try {
 
-                val direccionDTO = call.receive<DireccionDTO>()
-                val direccion = direccionDTO.toDireccion()
-                val nuevaDireccion = _repository.crearDireccion(direccion)
-                val responseDTO = nuevaDireccion.toDto()
+                val metodoPagoDTO = call.receive<MetodosPagoDTO>()
+                val metodoPago = metodoPagoDTO.toMetodosPago()
+                val nuevoMetodo = _repository.crearMetodoPago(metodoPago)
+                val responseDTO = nuevoMetodo.toDto()
 
                 apiResponse.success = true
-                apiResponse.message = "Dirección creada exitosamente"
+                apiResponse.message = "Metodo de pago creado exitosamente"
                 apiResponse.data = responseDTO
 
                 call.respond(HttpStatusCode.Created, apiResponse)
@@ -36,7 +36,7 @@ fun Route.direccionRouting(_repository: IDireccionRepository){
             } catch (e: Exception) {
 
                 apiResponse.success = false
-                apiResponse.message = "Error al crear la dirección"
+                apiResponse.message = "Error al crear el metodo de pago"
                 apiResponse.errors = listOf(e.message ?: "Error desconocido")
 
                 call.respond(HttpStatusCode.InternalServerError, apiResponse)
@@ -46,20 +46,20 @@ fun Route.direccionRouting(_repository: IDireccionRepository){
 
         //--------------------------------------------------------------------------------------------------------------
 
-        get("/obtenerDireccionesPorCliente/{idCliente}") {
+        get("/obtenerMetodoPagoPorCliente/{idCliente}") {
 
-            val apiResponse = ApiResponse<List<DireccionDTO>>()
+            val apiResponse = ApiResponse<List<MetodosPagoDTO>>()
             val idCliente = call.parameters["idCliente"]
 
             if (idCliente != null) {
 
                 try {
 
-                    val direcciones = _repository.obtenerDireccionesPorCliente(idCliente)
-                    val responseDTOs = direcciones.map { it.toDto() }
+                    val metodosPago = _repository.obtenerMetodoPagoPorCliente(idCliente)
+                    val responseDTOs = metodosPago.map { it.toDto() }
 
                     apiResponse.success = true
-                    apiResponse.message = "Direcciones obtenidas exitosamente"
+                    apiResponse.message = "Metodos de pago obtenidos exitosamente"
                     apiResponse.data = responseDTOs
 
                     call.respond(HttpStatusCode.OK, apiResponse)
@@ -67,7 +67,7 @@ fun Route.direccionRouting(_repository: IDireccionRepository){
                 } catch (e: Exception) {
 
                     apiResponse.success = false
-                    apiResponse.message = "Error al obtener las direcciones"
+                    apiResponse.message = "Error al obtener los metodos de pago"
                     apiResponse.errors = listOf(e.message ?: "Error desconocido")
 
                     call.respond(HttpStatusCode.InternalServerError, apiResponse)
@@ -85,21 +85,21 @@ fun Route.direccionRouting(_repository: IDireccionRepository){
 
         //--------------------------------------------------------------------------------------------------------------
 
-        get("/obtenerDireccionPorId/{idDireccion}") {
+        get("/obtenerMetodoPagoPorId/{idMetodoPago}") {
 
-            val apiResponse = ApiResponse<DireccionDTO>()
-            val idDireccion = call.parameters["idDireccion"]
+            val apiResponse = ApiResponse<MetodosPagoDTO>()
+            val idMetodoPago = call.parameters["idMetodoPago"]
 
-            if (idDireccion != null) {
+            if (idMetodoPago != null) {
 
                 try {
 
-                    val direccion = _repository.obtenerDireccionPorId(idDireccion)
-                    if (direccion != null) {
-                        val responseDTO = direccion.toDto()
+                    val metodoPago = _repository.obtenerMetodoPagoPorId(idMetodoPago)
+                    if (metodoPago != null) {
+                        val responseDTO = metodoPago.toDto()
 
                         apiResponse.success = true
-                        apiResponse.message = "Dirección obtenida exitosamente"
+                        apiResponse.message = "Metodo de pago obtenido exitosamente"
                         apiResponse.data = responseDTO
 
                         call.respond(HttpStatusCode.OK, apiResponse)
@@ -107,15 +107,15 @@ fun Route.direccionRouting(_repository: IDireccionRepository){
                     } else {
 
                         apiResponse.success = false
-                        apiResponse.message = "Dirección no encontrada"
-                        apiResponse.errors = listOf("No existe una dirección con el ID proporcionado")
+                        apiResponse.message = "Metodo de pago no encontrado"
+                        apiResponse.errors = listOf("No existe un metodo de pago con el ID proporcionado")
 
                         call.respond(HttpStatusCode.NotFound, apiResponse)
                     }
                 } catch (e: Exception) {
 
                     apiResponse.success = false
-                    apiResponse.message = "Error al obtener la dirección"
+                    apiResponse.message = "Error al obtener el metodo de pago"
                     apiResponse.errors = listOf(e.message ?: "Error desconocido")
 
                     call.respond(HttpStatusCode.InternalServerError, apiResponse)
@@ -133,34 +133,34 @@ fun Route.direccionRouting(_repository: IDireccionRepository){
 
         //--------------------------------------------------------------------------------------------------------------
 
-        put("/actualizarDireccion") {
+        put("/actualizarMetodoPago") {
 
             val apiResponse = ApiResponse<Unit>()
 
             try {
 
-                val direccionDto = call.receive<DireccionDTO>()
+                val metodoPagoDto = call.receive<MetodosPagoDTO>()
 
-                val id = direccionDto.idDireccion
+                val id = metodoPagoDto.idMetodoPago
 
                 if (id != null) {
 
-                    val direccion = direccionDto.toDireccion()
+                    val metodoPago = metodoPagoDto.toMetodosPago()
 
-                    val direccionEditada = _repository.actualizarDireccion(id, direccion)
+                    val metodoEditado = _repository.actualizarMetodosPago(id, metodoPago)
 
-                    if (direccionEditada) {
+                    if (metodoEditado) {
 
                         apiResponse.success = true
-                        apiResponse.message = "Direccion actualizada"
+                        apiResponse.message = "Metodo de pago actualizado"
 
                         call.respond(HttpStatusCode.OK, apiResponse)
 
                     } else {
 
                         apiResponse.success = false
-                        apiResponse.message = "Direccion no encontrada"
-                        apiResponse.errors = listOf("No existe una direccion con el ID proporcionado")
+                        apiResponse.message = "Metodo de pago no encontrado"
+                        apiResponse.errors = listOf("No existe un metodo de pago con el ID proporcionado")
 
                         call.respond(HttpStatusCode.NotFound, apiResponse)
                     }
@@ -168,8 +168,8 @@ fun Route.direccionRouting(_repository: IDireccionRepository){
                 } else {
 
                     apiResponse.success = false
-                    apiResponse.message = "ID de direccion no proporcionado"
-                    apiResponse.errors = listOf("No se proporciono ningun id de direccion")
+                    apiResponse.message = "ID de metodo de pago no proporcionado"
+                    apiResponse.errors = listOf("No se proporciono ningun id de metodo de pago")
 
                     call.respond(HttpStatusCode.BadRequest, apiResponse)
                 }
@@ -177,7 +177,7 @@ fun Route.direccionRouting(_repository: IDireccionRepository){
             } catch (e: Exception){
 
                 apiResponse.success = false
-                apiResponse.message = "Error al actualizar el cliente"
+                apiResponse.message = "Error al actualizar el metodo de pago"
                 apiResponse.errors = listOf(e.message ?: "Error desconocido")
 
                 call.respond(HttpStatusCode.InternalServerError, apiResponse)
@@ -186,7 +186,7 @@ fun Route.direccionRouting(_repository: IDireccionRepository){
 
         //--------------------------------------------------------------------------------------------------------------
 
-        delete("/eliminarDireccion/{id}") {
+        delete("/eliminarMetodoPago/{id}") {
 
             val apiResponse = ApiResponse<Unit>()
 
@@ -196,20 +196,20 @@ fun Route.direccionRouting(_repository: IDireccionRepository){
 
                 try {
 
-                    val eliminado = _repository.eliminarDireccion(id)
+                    val eliminado = _repository.eliminarMetodoPago(id)
 
                     if (eliminado) {
 
                         apiResponse.success = true
-                        apiResponse.message = "Direccion eliminada"
+                        apiResponse.message = "Metodo de pago eliminado"
 
                         call.respond(HttpStatusCode.OK, apiResponse)
 
                     } else {
 
                         apiResponse.success = false
-                        apiResponse.message = "Direccion no encontrada"
-                        apiResponse.errors = listOf("No existe una direccion con el ID proporcionado")
+                        apiResponse.message = "Metodo de pago no encontrado"
+                        apiResponse.errors = listOf("No existe un metodo de pago con el ID proporcionado")
 
                         call.respond(HttpStatusCode.NotFound, apiResponse)
                     }
@@ -217,7 +217,7 @@ fun Route.direccionRouting(_repository: IDireccionRepository){
                 } catch (e: Exception){
 
                     apiResponse.success = false
-                    apiResponse.message = "Error al eliminar la direccion"
+                    apiResponse.message = "Error al eliminar el metodo de pago"
                     apiResponse.errors = listOf(e.message ?: "Error desconocido")
 
                     call.respond(HttpStatusCode.InternalServerError, apiResponse)
@@ -226,8 +226,8 @@ fun Route.direccionRouting(_repository: IDireccionRepository){
             } else {
 
                 apiResponse.success = false
-                apiResponse.message = "ID direccion no proporcionado"
-                apiResponse.errors = listOf("No se proporciono ningun id de direccion")
+                apiResponse.message = "ID metodo de pago no proporcionado"
+                apiResponse.errors = listOf("No se proporciono ningun id de metodo de pago")
 
                 call.respond(HttpStatusCode.BadRequest, apiResponse)
             }

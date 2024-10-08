@@ -50,6 +50,7 @@ class DireccionRepository(private val firestore: Firestore) : IDireccionReposito
             .whereEqualTo("idCliente", idCliente)
             .get()
             .await()
+
         return snapshot.documents.mapNotNull { document ->
             document.toObject(Direccion::class.java).copy(idDireccion = document.id)
         }

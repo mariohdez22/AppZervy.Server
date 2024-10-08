@@ -2,8 +2,10 @@ package com.example.firebase
 
 import com.example.repository.clases.ClienteRepository
 import com.example.repository.clases.DireccionRepository
+import com.example.repository.clases.MetodosPagoRepository
 import com.example.repository.interfaces.IClienteRepostory
 import com.example.repository.interfaces.IDireccionRepository
+import com.example.repository.interfaces.IMetodosPagoRepository
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
@@ -36,4 +38,7 @@ val appModule = module {
 
     //Proveedor de DireccionRepository
     single<IDireccionRepository> {DireccionRepository(get())}
+
+    //Proveedor de MetodosPagoRepository
+    single<IMetodosPagoRepository> {MetodosPagoRepository(get())}
 }

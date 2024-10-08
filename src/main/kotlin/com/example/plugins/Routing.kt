@@ -2,8 +2,10 @@ package com.example.plugins
 
 import com.example.repository.interfaces.IClienteRepostory
 import com.example.repository.interfaces.IDireccionRepository
+import com.example.repository.interfaces.IMetodosPagoRepository
 import com.example.routes.clienteRouting
 import com.example.routes.direccionRouting
+import com.example.routes.metodosPagoRouting
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -14,6 +16,8 @@ fun Application.configureRouting() {
     val _repositoryCliente by inject<IClienteRepostory>()
 
     val _repositoryDireccion by inject<IDireccionRepository>()
+
+    val _repositoryMetodosPago by inject<IMetodosPagoRepository>()
 
     routing {
 
@@ -26,6 +30,9 @@ fun Application.configureRouting() {
 
         //llamada de funcion(controlador) de direccion
         direccionRouting(_repositoryDireccion)
+
+        //llamada de funcion(controlador) de metodosPago
+        metodosPagoRouting(_repositoryMetodosPago)
 
     }
 }

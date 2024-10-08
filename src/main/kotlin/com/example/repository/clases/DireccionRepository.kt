@@ -31,9 +31,11 @@ class DireccionRepository(private val firestore: Firestore) : IDireccionReposito
 
     override suspend fun crearDireccion(direccion: Direccion): Direccion {
 
-        val clienteDoc = firestore.collection("clientes").document(direccion.idCliente).get().await()
-        if (!clienteDoc.exists()) {
-            throw IllegalArgumentException("El cliente con ID ${direccion.idCliente} no existe")
+        val clienteDoc = direccion.idCliente?.let { firestore.collection("clientes").document(it).get().await() }
+        if (clienteDoc != null) {
+            if (!clienteDoc.exists()) {
+                throw IllegalArgumentException("El cliente con ID ${direccion.idCliente} no existe")
+            }
         }
 
         val docRef = firestore.collection("direcciones").document()

@@ -7,7 +7,7 @@ fun DireccionDTO.toDireccion() : Direccion {
 
     return Direccion(
         idDireccion = this.idDireccion ?: "",
-        idCliente = this.idCliente,
+        idCliente = this.idCliente ?: "",
         direccion1 = this.direccion1,
         direccion2 = this.direccion2,
         numResidencia = this.numResidencia,
@@ -22,7 +22,7 @@ fun Direccion.toDto() : DireccionDTO {
 
     return DireccionDTO(
         idDireccion = this.idDireccion ?: "",
-        idCliente = this.idCliente,
+        idCliente = this.idCliente ?: "",
         direccion1 = this.direccion1,
         direccion2 = this.direccion2,
         numResidencia = this.numResidencia,

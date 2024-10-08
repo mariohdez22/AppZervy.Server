@@ -1,7 +1,7 @@
 package com.example.models
 
 import kotlinx.serialization.Serializable
-
+//Hola
 @Serializable
 data class SocioComercial(
     val idSocioComercial: String? = null,

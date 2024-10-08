@@ -2,7 +2,7 @@ package com.example.Mappers
 
 import com.example.DTOs.SocioIndividualDTO
 import com.example.models.SocioIndividual
-
+//Hola
 // Mapper de SocioIndividualDTO hacia SocioIndividual (para métodos create, update y delete)
 fun SocioIndividualDTO.toSocioIndividual(): SocioIndividual {
     return SocioIndividual(

@@ -2,7 +2,7 @@ package com.example.Mappers
 
 import com.example.DTOs.SocioComercialDTO
 import com.example.models.SocioComercial
-
+//Hola
 // Mapper de SocioComercialDTO hacia SocioComercial (para métodos create, update y delete)
 fun SocioComercialDTO.toSocioComercial(): SocioComercial {
     return SocioComercial(

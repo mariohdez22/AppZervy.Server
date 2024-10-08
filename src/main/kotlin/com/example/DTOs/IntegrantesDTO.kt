@@ -2,6 +2,7 @@ package com.example.DTOs
 
 import kotlinx.serialization.Serializable
 
+//Hola
 @Serializable
 data class IntegrantesDTO(
     val idIntegranteDto: String? = null,

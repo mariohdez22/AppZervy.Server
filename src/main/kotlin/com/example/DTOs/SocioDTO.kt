@@ -1,7 +1,7 @@
 package com.example.DTOs
 
 import kotlinx.serialization.Serializable
-
+//Hola
 @Serializable
 data class SocioDTO(
     val idSocioDto: String? = null,

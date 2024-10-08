@@ -3,6 +3,8 @@ package com.example.plugins
 import com.example.repository.interfaces.IClienteRepostory
 import com.example.repository.interfaces.IDireccionRepository
 import com.example.repository.interfaces.IMetodosPagoRepository
+import com.example.repository.interfaces.IPropuestaServicioRepository
+import com.example.routes.PropuestaServicio
 import com.example.routes.clienteRouting
 import com.example.routes.direccionRouting
 import com.example.routes.metodosPagoRouting
@@ -19,6 +21,8 @@ fun Application.configureRouting() {
 
     val _repositoryMetodosPago by inject<IMetodosPagoRepository>()
 
+    val _repositoryPropuestaServicio by inject<IPropuestaServicioRepository>()
+
     routing {
 
         get("/") {
@@ -34,5 +38,7 @@ fun Application.configureRouting() {
         //llamada de funcion(controlador) de metodosPago
         metodosPagoRouting(_repositoryMetodosPago)
 
+        //Propuesta Servicio
+        PropuestaServicio(_repositoryPropuestaServicio)
     }
 }

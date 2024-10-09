@@ -6,8 +6,8 @@ import com.example.models.Inspeccion
 fun Inspeccion.toInspeccionDTO() : InspeccionDTO {
 
     return InspeccionDTO(
-        codInspeccionDTO = codInspeccion,
-        idPropuestaDTO = idPropuesta,
+        codInspeccionDTO = codInspeccion ?: "",
+        idPropuestaDTO = idPropuesta ?: "",
         estadoInspeccionDTO = estadoInspeccion,
         tokenInspeccionDTO = tokenInspeccion,
         duracionInspeccionDTO = duracionInspeccion,
@@ -19,8 +19,8 @@ fun Inspeccion.toInspeccionDTO() : InspeccionDTO {
 fun InspeccionDTO.toInspeccion() : Inspeccion {
 
     return Inspeccion(
-        codInspeccion = codInspeccionDTO,
-        idPropuesta = idPropuestaDTO,
+        codInspeccion = codInspeccionDTO ?: "",
+        idPropuesta = idPropuestaDTO ?: "",
         estadoInspeccion = estadoInspeccionDTO,
         tokenInspeccion = tokenInspeccionDTO,
         duracionInspeccion = duracionInspeccionDTO,

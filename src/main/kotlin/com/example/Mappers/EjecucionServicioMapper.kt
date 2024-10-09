@@ -5,9 +5,9 @@ import com.example.models.EjecucionServicio
 
 fun EjecucionServicio.toEjecucionServicioDTO() : EjecucionServicioDTO {
     return EjecucionServicioDTO(
-        codServicioDTO = codServicio,
-        idPropuestaDTO =  idPropuesta,
-        idSocioDTO =  idSocio,
+        codServicioDTO = codServicio ?: "",
+        idPropuestaDTO =  idPropuesta ?: "",
+        idSocioDTO =  idSocio ?: "",
         estadoServicioDTO = estadoServicio,
         duracionServicioDTO = duracionServicio,
         tokenServicioDTO = tokenServicio,
@@ -19,9 +19,9 @@ fun EjecucionServicio.toEjecucionServicioDTO() : EjecucionServicioDTO {
 
 fun EjecucionServicioDTO.toEjecucionServicio(): EjecucionServicio {
     return EjecucionServicio(
-        codServicio = codServicioDTO,
-        idPropuesta = idPropuestaDTO,
-        idSocio = idSocioDTO,
+        codServicio = codServicioDTO ?: "",
+        idPropuesta = idPropuestaDTO ?: "",
+        idSocio = idSocioDTO ?: "",
         estadoServicio = estadoServicioDTO,
         duracionServicio = duracionServicioDTO,
         tokenServicio = tokenServicioDTO,

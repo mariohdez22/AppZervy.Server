@@ -74,7 +74,6 @@ class DireccionRepository(private val firestore: Firestore) : IDireccionReposito
     }
 
     override suspend fun eliminarDireccion(idDireccion: String): Boolean {
-
         firestore.collection("direcciones").document(idDireccion).delete().await()
         return true
     }

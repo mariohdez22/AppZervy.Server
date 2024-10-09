@@ -5,8 +5,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class PropuestaServicioDTO(
     val idPropuestaDTO: String? = null,
-    val idSocioDTO: String = "",
-    val idSolicitudDTO: String = "",
+    val idSocioDTO: String? = null,
+    val idSolicitudDTO: String? = null,
     val nombreClienteDTO: String = "",
     val tituloCategoriaDTO: String = "",
     val fotoDTO: String = "",

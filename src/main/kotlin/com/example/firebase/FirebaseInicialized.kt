@@ -1,29 +1,7 @@
 package com.example.firebase
 
-import com.example.repository.clases.CategoriaServicioRepository
-import com.example.repository.clases.ClienteRepository
-import com.example.repository.clases.DetallePagoRepository
-import com.example.repository.clases.DireccionRepository
-import com.example.repository.clases.EjecucionServiceRepository
-import com.example.repository.clases.EvidenciaServicioRepository
-import com.example.repository.clases.InspeccionRepository
-import com.example.repository.clases.MetodosPagoRepository
-import com.example.repository.clases.PagoServicioRepository
-import com.example.repository.clases.PersonalRepository
-import com.example.repository.clases.PropuestaServicioRepository
-import com.example.repository.clases.ReseñasRepository
-import com.example.repository.interfaces.ICategoriaServicioRepository
-import com.example.repository.interfaces.IClienteRepostory
-import com.example.repository.interfaces.IDetallePagoRepository
-import com.example.repository.interfaces.IDireccionRepository
-import com.example.repository.interfaces.IEjecucionServicioRepository
-import com.example.repository.interfaces.IEvidenciaServicioRepository
-import com.example.repository.interfaces.IInspeccionRepository
-import com.example.repository.interfaces.IMetodosPagoRepository
-import com.example.repository.interfaces.IPagoServicioRepository
-import com.example.repository.interfaces.IPersonalRepository
-import com.example.repository.interfaces.IPropuestaServicioRepository
-import com.example.repository.interfaces.IReseñasRepository
+import com.example.repository.clases.*
+import com.example.repository.interfaces.*
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
@@ -68,6 +46,18 @@ val appModule = module {
 
     // Proveedor de EvidenciaServicioRepository
     single< IEvidenciaServicioRepository> { EvidenciaServicioRepository(get())}
+
+    //Proveedor de SocioComercialRepository
+    single<ISocioComercialRepository> {SocioComercialRepository(get())}
+
+    //Proveedor de SocioIndividualRepository
+    single<ISocioIndividualRepository> { SocioIndividualRepository(get()) }
+
+    //Proveedor de SocioRepository
+    single<ISocioRepository> {SocioRepository(get())}
+
+    //Proveedor de IntegranteRespository
+    single<IIntegranteRepository> {IntegranteRepository(get())}
 
     //Proveedor de CategoriaServicioRepository
     single<ICategoriaServicioRepository> {CategoriaServicioRepository(get())}

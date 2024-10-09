@@ -1,6 +1,7 @@
 package com.example.plugins
 
 import com.example.repository.clases.DetallePagoRepository
+import com.example.models.PropuestaServicio
 import com.example.repository.interfaces.*
 import com.example.routes.*
 import com.example.repository.interfaces.IClienteRepostory
@@ -10,7 +11,7 @@ import com.example.repository.interfaces.IMetodosPagoRepository
 import com.example.repository.interfaces.IPersonalRepository
 import com.example.repository.interfaces.IPropuestaServicioRepository
 import com.example.repository.interfaces.IReseñasRepository
-import com.example.routes.PropuestaServicio
+import com.example.routes.PropuestaServicioRouting
 import com.example.routes.clienteRouting
 import com.example.routes.direccionRouting
 import com.example.routes.evidenciaServicioRouting
@@ -33,6 +34,14 @@ fun Application.configureRouting() {
     val _repositoryCategoriaServicio by inject<ICategoriaServicioRepository>()
 
     val _repositoryPropuestaServicio by inject<IPropuestaServicioRepository>()
+
+    val _repositoryIntegrante by inject<IIntegranteRepository>()
+
+    val _repositorySocioComercial by inject<ISocioComercialRepository>()
+
+    val _repositorySocioIndividual by inject<ISocioIndividualRepository>()
+
+    val _repositorySocio by inject<ISocioRepository>()
 
     val _repositoryPersonal by inject<IPersonalRepository>()
 
@@ -67,7 +76,19 @@ fun Application.configureRouting() {
         categoriaServicioRouting(_repositoryCategoriaServicio)
 
         //Propuesta Servicio
-        PropuestaServicio(_repositoryPropuestaServicio)
+        //PropuestaServicio(_repositoryPropuestaServicio)
+
+        //Servicio Integrante
+        integranteRouting(_repositoryIntegrante)
+
+        //Servicio Socio Comercial
+        socioComercialRoute(_repositorySocioComercial)
+
+        //Servicio Socio Individual
+        socioIndividualRouting(_repositorySocioIndividual)
+
+        //Servicio Socio
+        socioRouting(_repositorySocio)
 
         //llamada de funcion(controlador) del Personal
         personalRouting(_repositoryPersonal)

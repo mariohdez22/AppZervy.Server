@@ -20,6 +20,8 @@ fun Application.configureRouting() {
 
     val _repositoryInspeccion by inject<IInspeccionRepository>()
 
+    val _repositoryEjecucionServicio by inject<IEjecucionServicioRepository>()
+
     routing {
 
         get("/") {
@@ -39,5 +41,7 @@ fun Application.configureRouting() {
         PropuestaServicioRouting(_repositoryPropuestaServicio)
 
         InspeccionRouting(_repositoryInspeccion)
+
+        EjecucionServicioRouting(_repositoryEjecucionServicio)
     }
 }

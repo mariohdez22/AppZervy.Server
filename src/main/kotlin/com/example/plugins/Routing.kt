@@ -1,6 +1,5 @@
 package com.example.plugins
 
-import com.example.repository.clases.InspeccionRepository
 import com.example.repository.interfaces.*
 import com.example.routes.*
 import io.ktor.server.application.*

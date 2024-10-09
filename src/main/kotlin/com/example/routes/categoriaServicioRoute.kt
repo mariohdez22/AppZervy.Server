@@ -3,7 +3,6 @@ package com.example.routes
 import com.example.ApiResponse.ApiResponse
 import com.example.DTOs.CategoriaServicioDTO
 import com.example.Mappers.toCategoriaServicio
-import com.example.Mappers.toCliente
 import com.example.Mappers.toDto
 import com.example.repository.interfaces.ICategoriaServicioRepository
 import io.ktor.http.*

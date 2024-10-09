@@ -16,6 +16,8 @@ fun Application.configureRouting() {
 
     val _repositoryMetodosPago by inject<IMetodosPagoRepository>()
 
+    val _repositoryCategoriaServicio by inject<ICategoriaServicioRepository>()
+
     val _repositoryPropuestaServicio by inject<IPropuestaServicioRepository>()
 
     val _repositoryInspeccion by inject<IInspeccionRepository>()
@@ -36,6 +38,9 @@ fun Application.configureRouting() {
 
         //llamada de funcion(controlador) de metodosPago
         metodosPagoRouting(_repositoryMetodosPago)
+
+        //Categoria servicio
+        categoriaServicioRouting(_repositoryCategoriaServicio)
 
         //Propuesta Servicio
         PropuestaServicioRouting(_repositoryPropuestaServicio)

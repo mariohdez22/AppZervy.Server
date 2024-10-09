@@ -1,7 +1,6 @@
 package com.example.repository.clases
 
 import com.example.models.CategoriaServicio
-import com.example.models.Cliente
 import com.example.repository.interfaces.ICategoriaServicioRepository
 import com.google.api.core.ApiFuture
 import com.google.api.core.ApiFutureCallback
@@ -42,7 +41,7 @@ class CategoriaServicioRepository(private val firestore: Firestore) : ICategoria
 
         val snapshot = firestore.collection("categoriaservicio").get().await()
         return snapshot.documents.mapNotNull { document ->
-            document.toObject(CategoriaServicio::class.java)?.copy(idCategoriaServicio = document.id)
+            document.toObject(CategoriaServicio::class.java).copy(idCategoriaServicio = document.id)
         }
     }
 

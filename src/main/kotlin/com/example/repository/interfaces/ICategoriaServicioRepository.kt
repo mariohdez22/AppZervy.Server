@@ -1,7 +1,6 @@
 package com.example.repository.interfaces
 
 import com.example.models.CategoriaServicio
-import com.example.models.Cliente
 
 interface ICategoriaServicioRepository {
 

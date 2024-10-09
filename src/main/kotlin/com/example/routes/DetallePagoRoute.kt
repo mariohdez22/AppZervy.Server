@@ -2,8 +2,10 @@ package com.example.routes
 
 import com.example.ApiResponse.ApiResponse
 import com.example.DTOs.DetallePagoDTO
+import com.example.DTOs.PropuestaServicioDTO
 import com.example.Mappers.toDetalle
 import com.example.Mappers.toDetalleDTO
+import com.example.Mappers.toPropuestaServicioDTO
 import com.example.repository.interfaces.IDetallePagoRepository
 import io.ktor.http.*
 import io.ktor.server.request.*
@@ -43,6 +45,35 @@ fun Route.DetallePagoRouting(
             }
 
         }
+
+        get(
+            "/obtenerDetalles"
+        ) {
+
+            val apiResponse = ApiResponse<List<DetallePagoDTO>>()
+
+            try{
+
+                val detalles = _repo.obtenerDetalles()
+                val responseDTO = detalles.map { it.toDetalleDTO() }
+
+                apiResponse.success = true
+                apiResponse.message = "Detalles obtenidos exitosamente"
+                apiResponse.data = responseDTO
+
+                call.respond(HttpStatusCode.OK, apiResponse)
+
+            }catch(e: Exception){
+
+                apiResponse.success = false
+                apiResponse.message = "Error al obtener detalles pago"
+                apiResponse.errors = listOf(e.message ?: "Error desconocido")
+
+                call.respond(HttpStatusCode.InternalServerError, apiResponse)
+            }
+
+        }
+
 
         get("/obtenerDetallesPorServicio/{idServicio}") {
 

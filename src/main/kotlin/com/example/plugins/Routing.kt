@@ -55,7 +55,7 @@ fun Application.configureRouting() {
 
     val _repositoryPagoServicio by inject<IPagoServicioRepository>()
 
-    val _repositoryDetallePago by inject<DetallePagoRepository>()
+    val _repositoryDetallePago by inject<IDetallePagoRepository>()
 
     routing {
 
@@ -98,7 +98,6 @@ fun Application.configureRouting() {
 
         //llamada de funcion(controlador) del Personal
         evidenciaServicioRouting(_repositoryEvidenciaServicio)
-
 
         PropuestaServicioRouting(_repositoryPropuestaServicio)
 

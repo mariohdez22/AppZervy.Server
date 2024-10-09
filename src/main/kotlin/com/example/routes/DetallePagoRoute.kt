@@ -203,19 +203,17 @@ fun Route.DetallePagoRouting(
             try {
 
                 val detalleDto = call.receive<DetallePagoDTO>()
-
                 val id = detalleDto.idDetalleDTO
 
                 if (id != null) {
 
                     val detalle = detalleDto.toDetalle()
-
                     val detalleEditado = _repo.actualizarDetalle(id, detalle)
 
                     if (detalleEditado) {
 
                         apiResponse.success = true
-                        apiResponse.message = "Detalle actualizada"
+                        apiResponse.message = "Detalle actualizado"
 
                         call.respond(HttpStatusCode.OK, apiResponse)
 
@@ -251,24 +249,19 @@ fun Route.DetallePagoRouting(
         delete("/eliminarDetalle/{idDetalle}") {
 
             val apiResponse = ApiResponse<Unit>()
-
             val id = call.parameters["idDetalle"]
 
             if (id != null) {
 
                 try {
-
                     val eliminado = _repo.eliminarDetalle(id)
 
                     if (eliminado) {
-
                         apiResponse.success = true
                         apiResponse.message = "Detalle eliminado"
 
                         call.respond(HttpStatusCode.OK, apiResponse)
-
                     } else {
-
                         apiResponse.success = false
                         apiResponse.message = "Detalle pago no encontrado"
                         apiResponse.errors =
@@ -278,7 +271,6 @@ fun Route.DetallePagoRouting(
                     }
 
                 } catch (e: Exception){
-
                     apiResponse.success = false
                     apiResponse.message = "Error al eliminar el detalle pago"
                     apiResponse.errors = listOf(e.message ?: "Error desconocido")
@@ -287,7 +279,6 @@ fun Route.DetallePagoRouting(
                 }
 
             } else {
-
                 apiResponse.success = false
                 apiResponse.message = "ID detalle pago no proporcionado"
                 apiResponse.errors = listOf("No se proporciono ningun id de direccion")

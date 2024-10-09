@@ -41,21 +41,21 @@ class DetallePagoRepository(
             firestore.collection("inspeccion").document(it).get().await()
         }
 
-        if (clienteDoc != null) {
-            if (!clienteDoc.exists()) {
-                throw IllegalArgumentException(
-                    "El cliente con ID ${detallePago.idPagoServicio} no existe"
-                )
-            }
-        }
-
-        if (inspeccionDoc != null) {
-            if (!inspeccionDoc.exists()) {
-                throw IllegalArgumentException(
-                    "El cliente con ID ${detallePago.codInspeccion} no existe"
-                )
-            }
-        }
+//        if (clienteDoc != null) {
+//            if (!clienteDoc.exists()) {
+//                throw IllegalArgumentException(
+//                    "El cliente con ID ${detallePago.idPagoServicio} no existe"
+//                )
+//            }
+//        }
+//
+//        if (inspeccionDoc != null) {
+//            if (!inspeccionDoc.exists()) {
+//                throw IllegalArgumentException(
+//                    "El cliente con ID ${detallePago.codInspeccion} no existe"
+//                )
+//            }
+//        }
 
         val docRef = firestore.collection("detallepago").document()
         val nuevaDetalle = detallePago.copy(idDetalle = docRef.id)
@@ -103,7 +103,7 @@ class DetallePagoRepository(
 
     override suspend fun actualizarDetalle(idDetalle: String, detallePago: DetallePago): Boolean {
         val docRef = firestore.collection("detallepago").document(idDetalle)
-        docRef.set(idDetalle).await()
+        docRef.set(detallePago).await()
         return true
     }
 

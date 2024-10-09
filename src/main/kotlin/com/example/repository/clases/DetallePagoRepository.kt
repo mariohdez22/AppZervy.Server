@@ -44,7 +44,7 @@ class DetallePagoRepository(
         if (clienteDoc != null) {
             if (!clienteDoc.exists()) {
                 throw IllegalArgumentException(
-                    "El cliente con ID ${detallePago.idPagoServicio} no existe"
+                    "El pago servicio con ID ${detallePago.idPagoServicio} no existe"
                 )
             }
         }
@@ -52,7 +52,7 @@ class DetallePagoRepository(
         if (inspeccionDoc != null) {
             if (!inspeccionDoc.exists()) {
                 throw IllegalArgumentException(
-                    "El cliente con ID ${detallePago.codInspeccion} no existe"
+                    "La inspeccion con ID ${detallePago.codInspeccion} no existe"
                 )
             }
         }

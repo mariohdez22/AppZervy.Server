@@ -1,5 +1,6 @@
 package com.example.repository.clases
 
+import com.example.models.Direccion
 import com.example.models.PropuestaServicio
 import com.example.repository.interfaces.IPropuestaServicioRepository
 import com.google.api.core.ApiFuture
@@ -41,6 +42,28 @@ class PropuestaServicioRepository(
         val snapShot = firestore.collection("propuestaservicios").get().await()
         return snapShot.documents.mapNotNull { document ->
             document.toObject(PropuestaServicio::class.java)
+        }
+    }
+
+    override suspend fun obtenerPropuestaServicioPorSocio(idSocio: String): List<PropuestaServicio> {
+        val snapshot = firestore.collection("propuestaservicios")
+            .whereEqualTo("idSocio", idSocio)
+            .get()
+            .await()
+
+        return snapshot.documents.mapNotNull { document ->
+            document.toObject(PropuestaServicio::class.java).copy(idPropuesta = document.id)
+        }
+    }
+
+    override suspend fun obtenerPropuestaServicioPorSolicitud(idSolicitud: String): List<PropuestaServicio> {
+        val snapshot = firestore.collection("propuestaservicios")
+            .whereEqualTo("idSolicitud", idSolicitud)
+            .get()
+            .await()
+
+        return snapshot.documents.mapNotNull { document ->
+            document.toObject(PropuestaServicio::class.java).copy(idPropuesta = document.id)
         }
     }
 

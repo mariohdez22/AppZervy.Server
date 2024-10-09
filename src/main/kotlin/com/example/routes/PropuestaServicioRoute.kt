@@ -10,7 +10,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.PropuestaServicio(
+fun Route.PropuestaServicioRouting(
     _repo: IPropuestaServicioRepository
 ){
     route("/propuestas"){
@@ -43,6 +43,80 @@ fun Route.PropuestaServicio(
                 call.respond(HttpStatusCode.InternalServerError, apiResponse)
             }
 
+        }
+
+        get("/obtenerPropuestaPorSocio/{idSocio}") {
+
+            val apiResponse = ApiResponse<List<PropuestaServicioDTO>>()
+            val idSocio = call.parameters["idSocio"]
+
+            if (idSocio != null) {
+
+                try {
+
+                    val pagos = _repo.obtenerPropuestaServicioPorSocio(idSocio)
+                    val responseDTOs = pagos.map { it.toPropuestaServicioDTO() }
+
+                    apiResponse.success = true
+                    apiResponse.message = "Propuestas servicios obtenidos exitosamente"
+                    apiResponse.data = responseDTOs
+
+                    call.respond(HttpStatusCode.OK, apiResponse)
+
+                } catch (e: Exception) {
+
+                    apiResponse.success = false
+                    apiResponse.message = "Error al obtener las propuestas servicios"
+                    apiResponse.errors = listOf(e.message ?: "Error desconocido")
+
+                    call.respond(HttpStatusCode.InternalServerError, apiResponse)
+                }
+
+            } else {
+
+                apiResponse.success = false
+                apiResponse.message = "ID del propuestas servicios no fue proporcionado"
+                apiResponse.errors = listOf("El parámetro 'idSocio' es obligatorio")
+
+                call.respond(HttpStatusCode.BadRequest, apiResponse)
+            }
+        }
+
+        get("/obtenerPropuestaPorSolicitud/{idSolicitud}") {
+
+            val apiResponse = ApiResponse<List<PropuestaServicioDTO>>()
+            val idSolicitud = call.parameters["idSolicitud"]
+
+            if (idSolicitud != null) {
+
+                try {
+
+                    val pagos = _repo.obtenerPropuestaServicioPorSolicitud(idSolicitud)
+                    val responseDTOs = pagos.map { it.toPropuestaServicioDTO() }
+
+                    apiResponse.success = true
+                    apiResponse.message = "Propuestas servicios obtenidos exitosamente"
+                    apiResponse.data = responseDTOs
+
+                    call.respond(HttpStatusCode.OK, apiResponse)
+
+                } catch (e: Exception) {
+
+                    apiResponse.success = false
+                    apiResponse.message = "Error al obtener las propuestas servicios"
+                    apiResponse.errors = listOf(e.message ?: "Error desconocido")
+
+                    call.respond(HttpStatusCode.InternalServerError, apiResponse)
+                }
+
+            } else {
+
+                apiResponse.success = false
+                apiResponse.message = "ID del propuestas servicios no fue proporcionado"
+                apiResponse.errors = listOf("El parámetro 'idSolicitud' es obligatorio")
+
+                call.respond(HttpStatusCode.BadRequest, apiResponse)
+            }
         }
 
         get(

@@ -1,5 +1,8 @@
 package com.example.plugins
 
+import com.example.repository.clases.DetallePagoRepository
+import com.example.repository.interfaces.*
+import com.example.routes.*
 import com.example.repository.interfaces.IClienteRepostory
 import com.example.repository.interfaces.IDireccionRepository
 import com.example.repository.interfaces.IEvidenciaServicioRepository
@@ -27,6 +30,8 @@ fun Application.configureRouting() {
 
     val _repositoryMetodosPago by inject<IMetodosPagoRepository>()
 
+    val _repositoryCategoriaServicio by inject<ICategoriaServicioRepository>()
+
     val _repositoryPropuestaServicio by inject<IPropuestaServicioRepository>()
 
     val _repositoryPersonal by inject<IPersonalRepository>()
@@ -34,6 +39,14 @@ fun Application.configureRouting() {
     val _repositoryReseñas by inject<IReseñasRepository>()
 
     val _repositoryEvidenciaServicio by inject<IEvidenciaServicioRepository>()
+
+    val _repositoryInspeccion by inject<IInspeccionRepository>()
+
+    val _repositoryEjecucionServicio by inject<IEjecucionServicioRepository>()
+
+    val _repositoryPagoServicio by inject<IPagoServicioRepository>()
+
+    val _repositoryDetallePago by inject<DetallePagoRepository>()
 
     routing {
 
@@ -50,6 +63,9 @@ fun Application.configureRouting() {
         //llamada de funcion(controlador) de metodosPago
         metodosPagoRouting(_repositoryMetodosPago)
 
+        //Categoria servicio
+        categoriaServicioRouting(_repositoryCategoriaServicio)
+
         //Propuesta Servicio
         PropuestaServicio(_repositoryPropuestaServicio)
 
@@ -63,5 +79,14 @@ fun Application.configureRouting() {
         evidenciaServicioRouting(_repositoryEvidenciaServicio)
 
 
+        PropuestaServicioRouting(_repositoryPropuestaServicio)
+
+        InspeccionRouting(_repositoryInspeccion)
+
+        EjecucionServicioRouting(_repositoryEjecucionServicio)
+
+        PagoServicioRouting(_repositoryPagoServicio)
+
+        DetallePagoRouting(_repositoryDetallePago)
     }
 }

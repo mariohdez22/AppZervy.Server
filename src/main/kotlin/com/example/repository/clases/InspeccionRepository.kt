@@ -1,5 +1,6 @@
 package com.example.repository.clases
 
+import com.example.models.Direccion
 import com.example.models.Inspeccion
 import com.example.repository.interfaces.IInspeccionRepository
 import com.google.api.core.ApiFuture
@@ -44,26 +45,41 @@ class InspeccionRepository(
             }
         }
 
-        val docRef = firestore.collection("propuestaservicios").document()
+        val docRef = firestore.collection("inspeccion").document()
         val nuevaInspeccion = inspeccion.copy(codInspeccion = docRef.id)
         docRef.set(nuevaInspeccion).await()
         return nuevaInspeccion
     }
 
     override suspend fun obtenerInspeccionPorPropuesta(idPropuesta: String): List<Inspeccion> {
-        TODO("Not yet implemented")
+        val snapshot = firestore.collection("propuestaservicios")
+            .whereEqualTo("idPropuesta", idPropuesta)
+            .get()
+            .await()
+
+        return snapshot.documents.mapNotNull { document ->
+            document.toObject(Inspeccion::class.java).copy(codInspeccion = document.id)
+        }
     }
 
-    override suspend fun obtenerInspeccionPorId(idInspeccion: String): Inspeccion? {
-        TODO("Not yet implemented")
+    override suspend fun obtenerInspeccionPorId(codInspeccion: String): Inspeccion? {
+        val doc = firestore.collection("inspeccion").document(codInspeccion).get().await()
+        return if (doc.exists()) {
+            doc.toObject(Inspeccion::class.java)?.copy(codInspeccion = doc.id)
+        } else {
+            null
+        }
     }
 
-    override suspend fun actualizarInspeccion(idInspeccion: String, inspeccion: Inspeccion): Boolean {
-        TODO("Not yet implemented")
+    override suspend fun actualizarInspeccion(codInspeccion: String, inspeccion: Inspeccion): Boolean {
+        val docRef = firestore.collection("inspeccion").document(codInspeccion)
+        docRef.set(inspeccion).await()
+        return true
     }
 
-    override suspend fun eliminarInspeccion(idInspeccion: String): Boolean {
-        TODO("Not yet implemented")
+    override suspend fun eliminarInspeccion(codInspeccion: String): Boolean {
+        firestore.collection("inspeccion").document(codInspeccion).delete().await()
+        return true
     }
 
 

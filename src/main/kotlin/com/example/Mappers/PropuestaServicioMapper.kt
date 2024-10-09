@@ -6,9 +6,9 @@ import com.example.models.PropuestaServicio
 fun PropuestaServicioDTO.toPropuestaServicio() : PropuestaServicio {
 
     return PropuestaServicio(
-        idPropuesta = this.idPropuestaDTO,
-        idSocio = this.idSocioDTO,
-        idSolicitud = this.idSolicitudDTO,
+        idPropuesta = this.idPropuestaDTO ?: "",
+        idSocio = this.idSocioDTO ?: "",
+        idSolicitud = this.idSolicitudDTO ?: "",
         nombreCliente = this.nombreClienteDTO,
         tituloCategoria = this.tituloCategoriaDTO,
         foto = this.fotoDTO,
@@ -26,9 +26,9 @@ fun PropuestaServicioDTO.toPropuestaServicio() : PropuestaServicio {
 fun PropuestaServicio.toPropuestaServicioDTO() : PropuestaServicioDTO {
 
     return PropuestaServicioDTO(
-        idPropuestaDTO = this.idPropuesta,
-        idSocioDTO = this.idSocio,
-        idSolicitudDTO = this.idSolicitud,
+        idPropuestaDTO = this.idPropuesta ?: "",
+        idSocioDTO = this.idSocio ?: "",
+        idSolicitudDTO = this.idSolicitud ?: "",
         nombreClienteDTO = this.nombreCliente,
         tituloCategoriaDTO = this.tituloCategoria,
         fotoDTO = this.foto,

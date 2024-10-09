@@ -1,18 +1,11 @@
 package com.example.firebase
 
-import com.example.models.Reseñas
 import com.example.repository.clases.ClienteRepository
 import com.example.repository.clases.DireccionRepository
-import com.example.repository.clases.EvidenciaServicioRepository
 import com.example.repository.clases.MetodosPagoRepository
-import com.example.repository.clases.PersonalRepository
-import com.example.repository.clases.ReseñasRepository
 import com.example.repository.interfaces.IClienteRepostory
 import com.example.repository.interfaces.IDireccionRepository
-import com.example.repository.interfaces.IEvidenciaServicioRepository
 import com.example.repository.interfaces.IMetodosPagoRepository
-import com.example.repository.interfaces.IPersonalRepository
-import com.example.repository.interfaces.IReseñasRepository
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
@@ -57,4 +50,27 @@ val appModule = module {
 
     // Proveedor de EvidenciaServicioRepository
     single< IEvidenciaServicioRepository> { EvidenciaServicioRepository(get())}
+
+    //Proveedor de CategoriaServicioRepository
+    single<ICategoriaServicioRepository> {CategoriaServicioRepository(get())}
+
+    //Proveedor de EjecucionServiceRepository
+    single<IEjecucionServicioRepository> {EjecucionServiceRepository(get())}
+
+    //Proveedor de InspeccionRepository
+    single<IInspeccionRepository> {InspeccionRepository(get())}
+
+    //Proveedor de PropuestaServicioRepository
+    single<IPropuestaServicioRepository> {PropuestaServicioRepository(get())}
+
+    single<IPagoServicioRepository> {PagoServicioRepository(get())}
+
+    single<IPropuestaServicioRepository> {PropuestaServicioRepository(get())}
+
+    single<IEjecucionServicioRepository> {EjecucionServiceRepository(get())}
+
+    single<IInspeccionRepository> {InspeccionRepository(get())}
+
+    single<IDetallePagoRepository> {DetallePagoRepository(get())}
+
 }

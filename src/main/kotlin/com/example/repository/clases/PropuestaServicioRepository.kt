@@ -32,6 +32,30 @@ class PropuestaServicioRepository(
     }
 
     override suspend fun crearPropuestaServicio(propuesta: PropuestaServicio): PropuestaServicio {
+        val socioDoc = propuesta.idSocio?.let {
+            firestore.collection("socios").document(it).get().await()
+        }
+
+        val solicitudDoc = propuesta.idSolicitud?.let {
+            firestore.collection("socios").document(it).get().await()
+        }
+
+        if (socioDoc != null) {
+            if (!socioDoc.exists()) {
+                throw IllegalArgumentException(
+                    "El socio con ID ${propuesta.idSocio} no existe"
+                )
+            }
+        }
+
+        if (solicitudDoc != null) {
+            if (!solicitudDoc.exists()) {
+                throw IllegalArgumentException(
+                    "La solicitud con ID ${propuesta.idSolicitud} no existe"
+                )
+            }
+        }
+
         val docRef = firestore.collection("propuestaservicios").document()
         val nuevaPropuesta = propuesta.copy(idPropuesta = docRef.id)
         docRef.set(nuevaPropuesta).await()

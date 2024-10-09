@@ -5,6 +5,7 @@ import com.example.models.EjecucionServicio
 interface IEjecucionServicioRepository {
 
     suspend fun crearEjecucionServicio(ejServicio: EjecucionServicio): EjecucionServicio
+    suspend fun obtenerEjecucionServicios(): List<EjecucionServicio>
     suspend fun obtenerEjecucionPorPropuesta(idPropuesta: String): List<EjecucionServicio>
     suspend fun obtenerEjecucionPorSocio(idSocio: String): List<EjecucionServicio>
     suspend fun obtenerEjecucionPorId(codServicio: String): EjecucionServicio?

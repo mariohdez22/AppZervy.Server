@@ -1,5 +1,8 @@
 package com.example.models
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class EjecucionServicio(
     val codServicio: String? = null,
     val idPropuesta: String? = null,

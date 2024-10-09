@@ -1,12 +1,10 @@
 package com.example.routes
 
 import com.example.ApiResponse.ApiResponse
+import com.example.DTOs.DetallePagoDTO
 import com.example.DTOs.DireccionDTO
 import com.example.DTOs.EjecucionServicioDTO
-import com.example.Mappers.toDireccion
-import com.example.Mappers.toDto
-import com.example.Mappers.toEjecucionServicio
-import com.example.Mappers.toEjecucionServicioDTO
+import com.example.Mappers.*
 import com.example.repository.interfaces.IEjecucionServicioRepository
 import io.ktor.http.*
 import io.ktor.server.request.*
@@ -45,6 +43,35 @@ fun Route.EjecucionServicioRouting(
             }
 
         }
+
+        get(
+            "/obtenerServicios"
+        ) {
+
+            val apiResponse = ApiResponse<List<EjecucionServicioDTO>>()
+
+            try{
+
+                val detalles = _repo.obtenerEjecucionServicios()
+                val responseDTO = detalles.map { it.toEjecucionServicioDTO() }
+
+                apiResponse.success = true
+                apiResponse.message = "Servicios obtenidos exitosamente"
+                apiResponse.data = responseDTO
+
+                call.respond(HttpStatusCode.OK, apiResponse)
+
+            }catch(e: Exception){
+
+                apiResponse.success = false
+                apiResponse.message = "Error al obtener servicios pago"
+                apiResponse.errors = listOf(e.message ?: "Error desconocido")
+
+                call.respond(HttpStatusCode.InternalServerError, apiResponse)
+            }
+
+        }
+
 
         get("/obtenerServicioPorPropuesta/{idPropuesta}") {
 

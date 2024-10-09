@@ -1,5 +1,8 @@
 package com.example.DTOs
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class PagoServicioDTO(
     val idPagoServicioDTO: String? = null,
     val idClienteDTO: String? = null,

@@ -2,6 +2,7 @@ package com.example.repository.clases
 
 import com.example.models.Direccion
 import com.example.models.Inspeccion
+import com.example.models.PropuestaServicio
 import com.example.repository.interfaces.IInspeccionRepository
 import com.google.api.core.ApiFuture
 import com.google.api.core.ApiFutureCallback
@@ -49,6 +50,13 @@ class InspeccionRepository(
         val nuevaInspeccion = inspeccion.copy(codInspeccion = docRef.id)
         docRef.set(nuevaInspeccion).await()
         return nuevaInspeccion
+    }
+
+    override suspend fun obtenerInspecciones(): List<Inspeccion> {
+        val snapShot = firestore.collection("inspeccion").get().await()
+        return snapShot.documents.mapNotNull { document ->
+            document.toObject(Inspeccion::class.java)
+        }
     }
 
     override suspend fun obtenerInspeccionPorPropuesta(idPropuesta: String): List<Inspeccion> {

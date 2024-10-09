@@ -42,21 +42,21 @@ class EjecucionServiceRepository(
             firestore.collection("socios").document(it).get().await()
         }
 
-//        if (propuestaDoc != null) {
-//            if (!propuestaDoc.exists()) {
-//                throw IllegalArgumentException(
-//                    "La propuesta con ID ${ejServicio.idPropuesta} no existe"
-//                )
-//            }
-//        }
-//
-//        if (socioDoc != null) {
-//            if (!socioDoc.exists()) {
-//                throw IllegalArgumentException(
-//                    "El socio con ID ${ejServicio.idSocio} no existe"
-//                )
-//            }
-//        }
+        if (propuestaDoc != null) {
+            if (!propuestaDoc.exists()) {
+                throw IllegalArgumentException(
+                    "La propuesta con ID ${ejServicio.idPropuesta} no existe"
+                )
+            }
+        }
+
+        if (socioDoc != null) {
+            if (!socioDoc.exists()) {
+                throw IllegalArgumentException(
+                    "El socio con ID ${ejServicio.idSocio} no existe"
+                )
+            }
+        }
 
 
         val docRef = firestore.collection("ejecucionservicio").document()

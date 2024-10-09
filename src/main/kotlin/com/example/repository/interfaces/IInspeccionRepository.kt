@@ -6,8 +6,8 @@ interface IInspeccionRepository {
 
     suspend fun crearInspeccion(inspeccion: Inspeccion): Inspeccion
     suspend fun obtenerInspeccionPorPropuesta(idPropuesta: String): List<Inspeccion>
-    suspend fun obtenerInspeccionPorId(idInspeccion: String): Inspeccion?
-    suspend fun actualizarInspeccion(idInspeccion: String, inspeccion: Inspeccion): Boolean
-    suspend fun eliminarInspeccion(idInspeccion: String): Boolean
+    suspend fun obtenerInspeccionPorId(codInspeccion: String): Inspeccion?
+    suspend fun actualizarInspeccion(codInspeccion: String, inspeccion: Inspeccion): Boolean
+    suspend fun eliminarInspeccion(codInspeccion: String): Boolean
 
 }

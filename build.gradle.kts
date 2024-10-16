@@ -37,6 +37,8 @@ dependencies {
     //implementacion corrutinas
     //implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 
+    implementation("io.ktor:ktor-server-auth:2.0.0")
+
     //implementacion corritinas core
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
 

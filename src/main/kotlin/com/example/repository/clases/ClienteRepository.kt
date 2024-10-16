@@ -29,24 +29,23 @@ class ClienteRepository(private val firestore: Firestore) : IClienteRepostory {
         }, Runnable::run)
     }
 
+    // Crear un nuevo cliente usando el uid como idCliente
     override suspend fun crearCliente(cliente: Cliente): Cliente {
-
-        val docRef = firestore.collection("clientes").document()
-        val nuevoCliente = cliente.copy(idCliente = docRef.id)
-        docRef.set(nuevoCliente).await()
-        return nuevoCliente
+        val docRef = firestore.collection("clientes").document(cliente.idCliente!!)
+        docRef.set(cliente).await()
+        return cliente
     }
 
+    // Obtener todos los clientes (no es necesario filtrar por uid, ya que cada documento es único por uid)
     override suspend fun obtenerClientes(): List<Cliente> {
-
         val snapshot = firestore.collection("clientes").get().await()
         return snapshot.documents.mapNotNull { document ->
             document.toObject(Cliente::class.java)?.copy(idCliente = document.id)
         }
     }
 
+    // Obtener un cliente por idCliente (uid)
     override suspend fun obtenerClientePorId(id: String): Cliente? {
-
         val doc = firestore.collection("clientes").document(id).get().await()
         return if (doc.exists()) {
             doc.toObject(Cliente::class.java)?.copy(idCliente = doc.id)
@@ -55,18 +54,26 @@ class ClienteRepository(private val firestore: Firestore) : IClienteRepostory {
         }
     }
 
+    // Actualizar un cliente si existe
     override suspend fun actualizarCliente(id: String, cliente: Cliente): Boolean {
-
-        val docRef = firestore.collection("clientes").document(id)
-        val updatedCliente = cliente.copy(idCliente = id)
-        docRef.set(updatedCliente).await()
-        return true
+        val clienteExistente = obtenerClientePorId(id)
+        return if (clienteExistente != null) {
+            firestore.collection("clientes").document(id).set(cliente).await()
+            true
+        } else {
+            false
+        }
     }
 
+    // Eliminar un cliente si existe
     override suspend fun eliminarCliente(id: String): Boolean {
-
-        firestore.collection("clientes").document(id).delete().await()
-        return true
+        val clienteExistente = obtenerClientePorId(id)
+        return if (clienteExistente != null) {
+            firestore.collection("clientes").document(id).delete().await()
+            true
+        } else {
+            false
+        }
     }
 
 }

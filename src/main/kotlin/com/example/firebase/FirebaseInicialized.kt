@@ -5,8 +5,10 @@ import com.example.repository.interfaces.*
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
+import io.ktor.server.auth.*
 import com.google.cloud.firestore.Firestore
 import com.google.firebase.cloud.FirestoreClient
+import com.example.firebase.*
 import org.koin.dsl.module
 
 val appModule = module {

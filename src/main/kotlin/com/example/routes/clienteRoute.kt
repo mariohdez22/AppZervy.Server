@@ -6,226 +6,202 @@ import com.example.Mappers.toCliente
 import com.example.Mappers.toDto
 import com.example.repository.interfaces.IClienteRepostory
 import io.ktor.http.*
+import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import com.example.plugins.FirebasePrincipal // Asegúrate de importar FirebasePrincipal
 
 fun Route.clienteRouting(_repository: IClienteRepostory) {
 
-    route("/clientes") {
+    authenticate("firebase-auth") { // Asegúrate de que las rutas están dentro del bloque authenticate
+        route("/clientes") {
 
-        //--------------------------------------------------------------------------------------------------------------
+            //--------------------------------------------------------------------------------------------------------------
 
-        // Crear un nuevo cliente
-        post("/crearCliente") {
+            // Crear un nuevo cliente
+            post("/crearCliente") {
+                val apiResponse = ApiResponse<ClienteDTO>()
 
-            val apiResponse = ApiResponse<ClienteDTO>()
+                // Obtener el uid del usuario autenticado
+                val principal = call.principal<FirebasePrincipal>()
+                val uid = principal?.decodedToken?.uid
 
-            try {
-
-                val clienteDto = call.receive<ClienteDTO>()
-                val cliente = clienteDto.toCliente()
-                val nuevoCliente = _repository.crearCliente(cliente)
-                val responseDto = nuevoCliente.toDto()
-
-                apiResponse.success = true
-                apiResponse.message = "Cliente creado exitosamente"
-                apiResponse.data = responseDto
-
-                call.respond(HttpStatusCode.Created, apiResponse)
-
-            } catch (e: Exception){
-
-                apiResponse.success = false
-                apiResponse.message = "Error al crear cliente"
-                apiResponse.errors = listOf(e.message ?: "Error desconocido")
-
-                call.respond(HttpStatusCode.InternalServerError, apiResponse)
-            }
-
-        }
-
-        //--------------------------------------------------------------------------------------------------------------
-
-        // Obtener todos los clientes
-        get("/obtenerClientes") {
-
-            val apiResponse = ApiResponse<List<ClienteDTO>>()
-
-            try {
-
-                val obtenerClientes = _repository.obtenerClientes()
-                val responseDto = obtenerClientes.map { it.toDto() }
-
-                apiResponse.success = true
-                apiResponse.message = "Clientes obtenidos exitosamente"
-                apiResponse.data = responseDto
-
-                call.respond(HttpStatusCode.OK , apiResponse)
-
-            } catch (e: Exception){
-
-                apiResponse.success = false
-                apiResponse.message = "Error al obtener clientes"
-                apiResponse.errors = listOf(e.message ?: "Error desconocido")
-
-                call.respond(HttpStatusCode.InternalServerError, apiResponse)
-            }
-
-        }
-
-        //--------------------------------------------------------------------------------------------------------------
-
-        // Obtener un cliente por ID
-        get("/obtenerClienteId/{id}") {
-
-            val apiResponse = ApiResponse<ClienteDTO>()
-
-            try {
-
-                val id = call.parameters["id"]
-
-                if (id != null) {
-
-                    val cliente = _repository.obtenerClientePorId(id)
-
-                    if (cliente != null) {
-
+                if (uid != null) {
+                    try {
+                        val clienteDto = call.receive<ClienteDTO>()
+                        val cliente = clienteDto.toCliente().copy(idCliente = uid)
+                        _repository.crearCliente(cliente)
                         val responseDto = cliente.toDto()
 
                         apiResponse.success = true
-                        apiResponse.message = "Cliente por id: $id"
+                        apiResponse.message = "Cliente creado exitosamente"
                         apiResponse.data = responseDto
 
-                        call.respond(HttpStatusCode.OK ,apiResponse)
+                        call.respond(HttpStatusCode.Created, apiResponse)
 
-                    } else {
+                    } catch (e: Exception) {
+                        apiResponse.success = false
+                        apiResponse.message = "Error al crear cliente"
+                        apiResponse.errors = listOf(e.message ?: "Error desconocido")
 
-                        call.respond(HttpStatusCode.NotFound, "Cliente no encontrado")
+                        call.respond(HttpStatusCode.InternalServerError, apiResponse)
                     }
 
                 } else {
+                    apiResponse.success = false
+                    apiResponse.message = "No se pudo obtener el UID del usuario autenticado"
+                    apiResponse.errors = listOf("Autenticación inválida")
 
-                    call.respond(HttpStatusCode.BadRequest, "ID de cliente no proporcionado")
+                    call.respond(HttpStatusCode.Unauthorized, apiResponse)
                 }
-
-            } catch (e: Exception){
-
-                apiResponse.success = false
-                apiResponse.message = "Error al obtener cliente"
-                apiResponse.errors = listOf(e.message ?: "Error desconocido")
-
-                call.respond(HttpStatusCode.InternalServerError, apiResponse)
             }
 
-        }
+            //--------------------------------------------------------------------------------------------------------------
 
-        //--------------------------------------------------------------------------------------------------------------
+            // Obtener el cliente autenticado
+            get("/obtenerCliente") {
+                val apiResponse = ApiResponse<ClienteDTO>()
 
-        // Actualizar un cliente
-        put("/actualizarCliente") {
+                // Obtener el uid del usuario autenticado
+                val principal = call.principal<FirebasePrincipal>()
+                val uid = principal?.decodedToken?.uid
 
-            val apiResponse = ApiResponse<Unit>()
+                if (uid != null) {
+                    try {
+                        val cliente = _repository.obtenerClientePorId(uid)
 
-            try {
+                        if (cliente != null) {
+                            val responseDto = cliente.toDto()
 
-                val clienteDto = call.receive<ClienteDTO>()
+                            apiResponse.success = true
+                            apiResponse.message = "Cliente obtenido exitosamente"
+                            apiResponse.data = responseDto
 
-                val id = clienteDto.idClienteDto
+                            call.respond(HttpStatusCode.OK, apiResponse)
 
-                if (id != null) {
+                        } else {
+                            apiResponse.success = false
+                            apiResponse.message = "Cliente no encontrado"
+                            apiResponse.errors = listOf("No existe un cliente con el UID proporcionado")
 
-                    val cliente = clienteDto.toCliente()
+                            call.respond(HttpStatusCode.NotFound, apiResponse)
+                        }
 
-                    val clienteEditado = _repository.actualizarCliente(id, cliente)
-
-                    if (clienteEditado) {
-
-                        apiResponse.success = true
-                        apiResponse.message = "Cliente actualizado"
-
-                        call.respond(HttpStatusCode.OK, apiResponse)
-
-                    } else {
-
+                    } catch (e: Exception) {
                         apiResponse.success = false
-                        apiResponse.message = "Cliente no encontrado"
-                        apiResponse.errors = listOf("No existe un cliente con el ID proporcionado")
+                        apiResponse.message = "Error al obtener cliente"
+                        apiResponse.errors = listOf(e.message ?: "Error desconocido")
 
-                        call.respond(HttpStatusCode.NotFound, apiResponse)
+                        call.respond(HttpStatusCode.InternalServerError, apiResponse)
                     }
 
                 } else {
-
                     apiResponse.success = false
-                    apiResponse.message = "ID de cliente no proporcionado"
-                    apiResponse.errors = listOf("No se proporciono ningun id de cliente")
+                    apiResponse.message = "No se pudo obtener el UID del usuario autenticado"
+                    apiResponse.errors = listOf("Autenticación inválida")
 
-                    call.respond(HttpStatusCode.BadRequest, apiResponse)
+                    call.respond(HttpStatusCode.Unauthorized, apiResponse)
                 }
-
-            } catch (e: Exception){
-
-                apiResponse.success = false
-                apiResponse.message = "Error al actualizar el cliente"
-                apiResponse.errors = listOf(e.message ?: "Error desconocido")
-
-                call.respond(HttpStatusCode.InternalServerError, apiResponse)
             }
-        }
 
-        //--------------------------------------------------------------------------------------------------------------
+            //--------------------------------------------------------------------------------------------------------------
 
-        // Eliminar un cliente
-        delete("/eliminarCliente/{id}") {
+            // Actualizar el cliente autenticado
+            put("/actualizarCliente") {
+                val apiResponse = ApiResponse<Unit>()
 
-            val apiResponse = ApiResponse<Unit>()
+                // Obtener el uid del usuario autenticado
+                val principal = call.principal<FirebasePrincipal>()
+                val uid = principal?.decodedToken?.uid
 
-            val id = call.parameters["id"]
+                if (uid != null) {
+                    try {
+                        val clienteDto = call.receive<ClienteDTO>()
+                        val cliente = clienteDto.toCliente().copy(idCliente = uid)
 
-            if (id != null) {
+                        val actualizado = _repository.actualizarCliente(uid, cliente)
 
-                try {
+                        if (actualizado) {
+                            apiResponse.success = true
+                            apiResponse.message = "Cliente actualizado"
 
-                    val eliminado = _repository.eliminarCliente(id)
+                            call.respond(HttpStatusCode.OK, apiResponse)
 
-                    if (eliminado) {
+                        } else {
+                            apiResponse.success = false
+                            apiResponse.message = "Cliente no encontrado"
+                            apiResponse.errors = listOf("No existe un cliente con el UID proporcionado")
 
-                        apiResponse.success = true
-                        apiResponse.message = "Cliente eliminado"
+                            call.respond(HttpStatusCode.NotFound, apiResponse)
+                        }
 
-                        call.respond(HttpStatusCode.OK, apiResponse)
-
-                    } else {
-
+                    } catch (e: Exception) {
                         apiResponse.success = false
-                        apiResponse.message = "cliente no encontrado"
-                        apiResponse.errors = listOf("No existe un cliente con el ID proporcionado")
+                        apiResponse.message = "Error al actualizar el cliente"
+                        apiResponse.errors = listOf(e.message ?: "Error desconocido")
 
-                        call.respond(HttpStatusCode.NotFound, apiResponse)
+                        call.respond(HttpStatusCode.InternalServerError, apiResponse)
                     }
 
-                } catch (e: Exception){
-
+                } else {
                     apiResponse.success = false
-                    apiResponse.message = "Error al eliminar el cliente"
-                    apiResponse.errors = listOf(e.message ?: "Error desconocido")
+                    apiResponse.message = "No se pudo obtener el UID del usuario autenticado"
+                    apiResponse.errors = listOf("Autenticación inválida")
 
-                    call.respond(HttpStatusCode.InternalServerError, apiResponse)
+                    call.respond(HttpStatusCode.Unauthorized, apiResponse)
                 }
+            }
 
-            } else {
+            //--------------------------------------------------------------------------------------------------------------
 
-                apiResponse.success = false
-                apiResponse.message = "ID cliente no proporcionado"
-                apiResponse.errors = listOf("No se proporciono ningun id de cliente")
+            // Eliminar el cliente autenticado
+            delete("/eliminarCliente") {
+                val apiResponse = ApiResponse<Unit>()
 
-                call.respond(HttpStatusCode.BadRequest, apiResponse)
+                // Obtener el uid del usuario autenticado
+                val principal = call.principal<FirebasePrincipal>()
+                val uid = principal?.decodedToken?.uid
+
+                if (uid != null) {
+                    try {
+                        val eliminado = _repository.eliminarCliente(uid)
+
+                        if (eliminado) {
+                            apiResponse.success = true
+                            apiResponse.message = "Cliente eliminado"
+
+                            call.respond(HttpStatusCode.OK, apiResponse)
+
+                        } else {
+                            apiResponse.success = false
+                            apiResponse.message = "Cliente no encontrado"
+                            apiResponse.errors = listOf("No existe un cliente con el UID proporcionado")
+
+                            call.respond(HttpStatusCode.NotFound, apiResponse)
+                        }
+
+                    } catch (e: Exception) {
+                        apiResponse.success = false
+                        apiResponse.message = "Error al eliminar el cliente"
+                        apiResponse.errors = listOf(e.message ?: "Error desconocido")
+
+                        call.respond(HttpStatusCode.InternalServerError, apiResponse)
+                    }
+
+                } else {
+                    apiResponse.success = false
+                    apiResponse.message = "No se pudo obtener el UID del usuario autenticado"
+                    apiResponse.errors = listOf("Autenticación inválida")
+
+                    call.respond(HttpStatusCode.Unauthorized, apiResponse)
+                }
             }
         }
-
     }
 }
+
+
 
 //----------------------------------------------------------------------------------------------------------------------
 

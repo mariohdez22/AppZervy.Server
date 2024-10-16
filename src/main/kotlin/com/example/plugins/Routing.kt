@@ -20,6 +20,7 @@ import com.example.routes.metodosPagoRouting
 import com.example.routes.personalRouting
 import com.example.routes.reseñasRouting
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
@@ -70,64 +71,71 @@ fun Application.configureRouting() {
             call.respondText("Vale verga este texto xd")
         }
 
-        //llamada de funcion(controlador) del cliente
-        clienteRouting(_repositoryCliente)
+        // Bloque de autenticación
+        authenticate("firebase-auth") {
 
-        //llamada de funcion(controlador) de direccion
-        direccionRouting(_repositoryDireccion)
+            //llamada de funcion(controlador) del cliente
+            clienteRouting(_repositoryCliente)
 
-        //llamada de funcion(controlador) de metodosPago
-        metodosPagoRouting(_repositoryMetodosPago)
+            //llamada de funcion(controlador) de direccion
+            direccionRouting(_repositoryDireccion)
 
-        //Categoria servicio
-        categoriaServicioRouting(_repositoryCategoriaServicio)
+            //llamada de funcion(controlador) de metodosPago
+            metodosPagoRouting(_repositoryMetodosPago)
 
-        //Propuesta Servicio
-        //PropuestaServicio(_repositoryPropuestaServicio)
+            //Categoria servicio
+            categoriaServicioRouting(_repositoryCategoriaServicio)
 
-        //Servicio Integrante
-        integranteRouting(_repositoryIntegrante)
+            //Propuesta Servicio
+            //PropuestaServicio(_repositoryPropuestaServicio)
 
-        //Servicio Socio Comercial
-        socioComercialRoute(_repositorySocioComercial)
+            //Servicio Integrante
+            integranteRouting(_repositoryIntegrante)
 
-        //Servicio Socio Individual
-        socioIndividualRouting(_repositorySocioIndividual)
+            //Servicio Socio Comercial
+            socioComercialRoute(_repositorySocioComercial)
 
-        //Servicio Socio
-        socioRouting(_repositorySocio)
+            //Servicio Socio Individual
+            socioIndividualRouting(_repositorySocioIndividual)
 
-        //llamada de funcion(controlador) del Personal
-        personalRouting(_repositoryPersonal)
+            //Servicio Socio
+            socioRouting(_repositorySocio)
 
-        //llamada de funcion(controlador) de Reseñas
-        reseñasRouting(_repositoryReseñas)
+            //llamada de funcion(controlador) del Personal
+            personalRouting(_repositoryPersonal)
 
-        //llamada de funcion(controlador) del Personal
-        evidenciaServicioRouting(_repositoryEvidenciaServicio)
+            //llamada de funcion(controlador) de Reseñas
+            reseñasRouting(_repositoryReseñas)
 
-        //a
-        PropuestaServicioRouting(_repositoryPropuestaServicio)
+            //llamada de funcion(controlador) del Personal
+            evidenciaServicioRouting(_repositoryEvidenciaServicio)
 
-        //e
-        InspeccionRouting(_repositoryInspeccion)
+            //a
+            PropuestaServicioRouting(_repositoryPropuestaServicio)
 
-        //i
-        EjecucionServicioRouting(_repositoryEjecucionServicio)
+            //e
+            InspeccionRouting(_repositoryInspeccion)
 
-        //o
-        PagoServicioRouting(_repositoryPagoServicio)
+            //i
+            EjecucionServicioRouting(_repositoryEjecucionServicio)
 
-        //u
-        DetallePagoRouting(_repositoryDetallePago)
+            //o
+            PagoServicioRouting(_repositoryPagoServicio)
 
-        //1
-        fotoSolicitudRouting(_repositoryFotoSolicitud)
+            //u
+            DetallePagoRouting(_repositoryDetallePago)
 
-        //2
-        pagoSocioRouting(_repositoryPagoSocio)
+            //1
+            fotoSolicitudRouting(_repositoryFotoSolicitud)
 
-        //3
-        solicitudServicioRouting(_repositorySolicitudServicio)
+            //2
+            pagoSocioRouting(_repositoryPagoSocio)
+
+            //3
+            solicitudServicioRouting(_repositorySolicitudServicio)
+
+        }
     }
 }
+
+

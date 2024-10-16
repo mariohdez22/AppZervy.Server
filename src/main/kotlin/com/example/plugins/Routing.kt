@@ -2,6 +2,7 @@ package com.example.plugins
 
 import com.example.repository.clases.DetallePagoRepository
 import com.example.models.PropuestaServicio
+import com.example.repository.clases.FotoSolicitudRepository
 import com.example.repository.interfaces.*
 import com.example.routes.*
 import com.example.repository.interfaces.IClienteRepostory
@@ -57,6 +58,12 @@ fun Application.configureRouting() {
 
     val _repositoryDetallePago by inject<IDetallePagoRepository>()
 
+    val _repositoryFotoSolicitud by inject<IFotoSolicitudRepository>()
+
+    val _repositoryPagoSocio by inject<IPagoSocioRepository>()
+
+    val _repositorySolicitudServicio by inject<ISolicitudServicioRepository>()
+
     routing {
 
         get("/") {
@@ -99,14 +106,28 @@ fun Application.configureRouting() {
         //llamada de funcion(controlador) del Personal
         evidenciaServicioRouting(_repositoryEvidenciaServicio)
 
+        //a
         PropuestaServicioRouting(_repositoryPropuestaServicio)
 
+        //e
         InspeccionRouting(_repositoryInspeccion)
 
+        //i
         EjecucionServicioRouting(_repositoryEjecucionServicio)
 
+        //o
         PagoServicioRouting(_repositoryPagoServicio)
 
+        //u
         DetallePagoRouting(_repositoryDetallePago)
+
+        //1
+        fotoSolicitudRouting(_repositoryFotoSolicitud)
+
+        //2
+        pagoSocioRouting(_repositoryPagoSocio)
+
+        //3
+        solicitudServicioRouting(_repositorySolicitudServicio)
     }
 }

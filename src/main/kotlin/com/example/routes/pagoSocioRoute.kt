@@ -1,35 +1,34 @@
 package com.example.routes
 
 import com.example.ApiResponse.ApiResponse
-import com.example.DTOs.MetodosPagoDTO
+import com.example.DTOs.PagoSocioDTO
 import com.example.Mappers.toDto
-import com.example.Mappers.toMetodosPago
-import com.example.repository.interfaces.IMetodosPagoRepository
+import com.example.Mappers.toPagoSocio
+import com.example.repository.interfaces.IPagoSocioRepository
 import io.ktor.http.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
+fun Route.pagoSocioRouting(_repository : IPagoSocioRepository) {
 
-    route("/metodosPago"){
+    route("/pagoSocio") {
 
         //--------------------------------------------------------------------------------------------------------------
 
-        //Endpoint para crear metodo de pago
-        post("/crearMetodoPago") {
+        post("/crearPagoSocio") {
 
-            val apiResponse = ApiResponse<MetodosPagoDTO>()
+            val apiResponse = ApiResponse<PagoSocioDTO>()
 
             try {
 
-                val metodoPagoDTO = call.receive<MetodosPagoDTO>()
-                val metodoPago = metodoPagoDTO.toMetodosPago()
-                val nuevoMetodo = _repository.crearMetodoPago(metodoPago)
-                val responseDTO = nuevoMetodo.toDto()
+                val pagoSocioDTO = call.receive<PagoSocioDTO>()
+                val pagoSocio = pagoSocioDTO.toPagoSocio()
+                val nuevaPagoSocio = _repository.crearPagoSocio(pagoSocio)
+                val responseDTO = nuevaPagoSocio.toDto()
 
                 apiResponse.success = true
-                apiResponse.message = "Metodo de pago creado exitosamente"
+                apiResponse.message = "PagoSocio creada exitosamente"
                 apiResponse.data = responseDTO
 
                 call.respond(HttpStatusCode.Created, apiResponse)
@@ -37,7 +36,7 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
             } catch (e: Exception) {
 
                 apiResponse.success = false
-                apiResponse.message = "Error al crear el metodo de pago"
+                apiResponse.message = "Error al crear la PagoSocio"
                 apiResponse.errors = listOf(e.message ?: "Error desconocido")
 
                 call.respond(HttpStatusCode.InternalServerError, apiResponse)
@@ -47,21 +46,20 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
 
         //--------------------------------------------------------------------------------------------------------------
 
-        //Endpoint para obtener metodo por cliente
-        get("/obtenerMetodoPagoPorCliente/{idCliente}") {
+        get("/obtenerPagoSocioesPorCliente/{idCliente}") {
 
-            val apiResponse = ApiResponse<List<MetodosPagoDTO>>()
-            val idCliente = call.parameters["idCliente"]
+            val apiResponse = ApiResponse<List<PagoSocioDTO>>()
+            val idSocio = call.parameters["idSocio"]
 
-            if (idCliente != null) {
+            if (idSocio != null) {
 
                 try {
 
-                    val metodosPago = _repository.obtenerMetodoPagoPorCliente(idCliente)
-                    val responseDTOs = metodosPago.map { it.toDto() }
+                    val pagoSocios = _repository.obtenerPagoSocioPorSocio(idSocio)
+                    val responseDTOs = pagoSocios.map { it.toDto() }
 
                     apiResponse.success = true
-                    apiResponse.message = "Metodos de pago obtenidos exitosamente"
+                    apiResponse.message = "PagoSocios obtenidas exitosamente"
                     apiResponse.data = responseDTOs
 
                     call.respond(HttpStatusCode.OK, apiResponse)
@@ -69,7 +67,7 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
                 } catch (e: Exception) {
 
                     apiResponse.success = false
-                    apiResponse.message = "Error al obtener los metodos de pago"
+                    apiResponse.message = "Error al obtener las PagoSocios"
                     apiResponse.errors = listOf(e.message ?: "Error desconocido")
 
                     call.respond(HttpStatusCode.InternalServerError, apiResponse)
@@ -78,8 +76,8 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
             } else {
 
                 apiResponse.success = false
-                apiResponse.message = "ID de cliente no proporcionado"
-                apiResponse.errors = listOf("El parámetro 'idCliente' es obligatorio")
+                apiResponse.message = "ID de Socio no proporcionado"
+                apiResponse.errors = listOf("El parámetro 'idSocio' es obligatorio")
 
                 call.respond(HttpStatusCode.BadRequest, apiResponse)
             }
@@ -87,22 +85,21 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
 
         //--------------------------------------------------------------------------------------------------------------
 
-        //Endpoint para obtener metodo por id
-        get("/obtenerMetodoPagoPorId/{idMetodoPago}") {
+        get("/obtenerPagoSocioPorId/{idPagoSocio}") {
 
-            val apiResponse = ApiResponse<MetodosPagoDTO>()
-            val idMetodoPago = call.parameters["idMetodoPago"]
+            val apiResponse = ApiResponse<PagoSocioDTO>()
+            val idPagoSocio = call.parameters["idPagoSocio"]
 
-            if (idMetodoPago != null) {
+            if (idPagoSocio != null) {
 
                 try {
 
-                    val metodoPago = _repository.obtenerMetodoPagoPorId(idMetodoPago)
-                    if (metodoPago != null) {
-                        val responseDTO = metodoPago.toDto()
+                    val pagoSocio = _repository.obtenerPagoSocioPorId(idPagoSocio)
+                    if (pagoSocio != null) {
+                        val responseDTO = pagoSocio.toDto()
 
                         apiResponse.success = true
-                        apiResponse.message = "Metodo de pago obtenido exitosamente"
+                        apiResponse.message = "PagoSocio obtenida exitosamente"
                         apiResponse.data = responseDTO
 
                         call.respond(HttpStatusCode.OK, apiResponse)
@@ -110,15 +107,15 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
                     } else {
 
                         apiResponse.success = false
-                        apiResponse.message = "Metodo de pago no encontrado"
-                        apiResponse.errors = listOf("No existe un metodo de pago con el ID proporcionado")
+                        apiResponse.message = "PagoSocio no encontrada"
+                        apiResponse.errors = listOf("No existe una PagoSocio con el ID proporcionado")
 
                         call.respond(HttpStatusCode.NotFound, apiResponse)
                     }
                 } catch (e: Exception) {
 
                     apiResponse.success = false
-                    apiResponse.message = "Error al obtener el metodo de pago"
+                    apiResponse.message = "Error al obtener la PagoSocio"
                     apiResponse.errors = listOf(e.message ?: "Error desconocido")
 
                     call.respond(HttpStatusCode.InternalServerError, apiResponse)
@@ -128,7 +125,7 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
 
                 apiResponse.success = false
                 apiResponse.message = "ID de dirección no proporcionado"
-                apiResponse.errors = listOf("El parámetro 'idDireccion' es obligatorio")
+                apiResponse.errors = listOf("El parámetro 'idPagoSocio' es obligatorio")
 
                 call.respond(HttpStatusCode.BadRequest, apiResponse)
             }
@@ -136,35 +133,34 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
 
         //--------------------------------------------------------------------------------------------------------------
 
-        //Endpoint para actualizar metodo de pago
-        put("/actualizarMetodoPago") {
+        put("/actualizarPagoSocio") {
 
             val apiResponse = ApiResponse<Unit>()
 
             try {
 
-                val metodoPagoDto = call.receive<MetodosPagoDTO>()
+                val pagoSocioDto = call.receive<PagoSocioDTO>()
 
-                val id = metodoPagoDto.idMetodoPago
+                val id = pagoSocioDto.idPagoSocio
 
                 if (id != null) {
 
-                    val metodoPago = metodoPagoDto.toMetodosPago()
+                    val pagoSocio = pagoSocioDto.toPagoSocio()
 
-                    val metodoEditado = _repository.actualizarMetodosPago(id, metodoPago)
+                    val pagoSocioEditada = _repository.actualizarPagoSocio(id, pagoSocio)
 
-                    if (metodoEditado) {
+                    if (pagoSocioEditada) {
 
                         apiResponse.success = true
-                        apiResponse.message = "Metodo de pago actualizado"
+                        apiResponse.message = "PagoSocio actualizada"
 
                         call.respond(HttpStatusCode.OK, apiResponse)
 
                     } else {
 
                         apiResponse.success = false
-                        apiResponse.message = "Metodo de pago no encontrado"
-                        apiResponse.errors = listOf("No existe un metodo de pago con el ID proporcionado")
+                        apiResponse.message = "PagoSocio no encontrada"
+                        apiResponse.errors = listOf("No existe una PagoSocio con el ID proporcionado")
 
                         call.respond(HttpStatusCode.NotFound, apiResponse)
                     }
@@ -172,8 +168,8 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
                 } else {
 
                     apiResponse.success = false
-                    apiResponse.message = "ID de metodo de pago no proporcionado"
-                    apiResponse.errors = listOf("No se proporciono ningun id de metodo de pago")
+                    apiResponse.message = "ID de PagoSocio no proporcionado"
+                    apiResponse.errors = listOf("No se proporciono ningun id de PagoSocio")
 
                     call.respond(HttpStatusCode.BadRequest, apiResponse)
                 }
@@ -181,7 +177,7 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
             } catch (e: Exception){
 
                 apiResponse.success = false
-                apiResponse.message = "Error al actualizar el metodo de pago"
+                apiResponse.message = "Error al actualizar el cliente"
                 apiResponse.errors = listOf(e.message ?: "Error desconocido")
 
                 call.respond(HttpStatusCode.InternalServerError, apiResponse)
@@ -190,8 +186,7 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
 
         //--------------------------------------------------------------------------------------------------------------
 
-        //Endpoint para eliminar metodo de pago
-        delete("/eliminarMetodoPago/{id}") {
+        delete("/eliminarPagoSocio/{id}") {
 
             val apiResponse = ApiResponse<Unit>()
 
@@ -201,20 +196,20 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
 
                 try {
 
-                    val eliminado = _repository.eliminarMetodoPago(id)
+                    val eliminado = _repository.eliminarPagoSocio(id)
 
                     if (eliminado) {
 
                         apiResponse.success = true
-                        apiResponse.message = "Metodo de pago eliminado"
+                        apiResponse.message = "PagoSocio eliminada"
 
                         call.respond(HttpStatusCode.OK, apiResponse)
 
                     } else {
 
                         apiResponse.success = false
-                        apiResponse.message = "Metodo de pago no encontrado"
-                        apiResponse.errors = listOf("No existe un metodo de pago con el ID proporcionado")
+                        apiResponse.message = "PagoSocio no encontrada"
+                        apiResponse.errors = listOf("No existe una PagoSocio con el ID proporcionado")
 
                         call.respond(HttpStatusCode.NotFound, apiResponse)
                     }
@@ -222,7 +217,7 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
                 } catch (e: Exception){
 
                     apiResponse.success = false
-                    apiResponse.message = "Error al eliminar el metodo de pago"
+                    apiResponse.message = "Error al eliminar la PagoSocio"
                     apiResponse.errors = listOf(e.message ?: "Error desconocido")
 
                     call.respond(HttpStatusCode.InternalServerError, apiResponse)
@@ -231,8 +226,8 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
             } else {
 
                 apiResponse.success = false
-                apiResponse.message = "ID metodo de pago no proporcionado"
-                apiResponse.errors = listOf("No se proporciono ningun id de metodo de pago")
+                apiResponse.message = "ID PagoSocio no proporcionado"
+                apiResponse.errors = listOf("No se proporciono ningun id de PagoSocio")
 
                 call.respond(HttpStatusCode.BadRequest, apiResponse)
             }

@@ -71,14 +71,27 @@ val appModule = module {
     //Proveedor de PropuestaServicioRepository
     single<IPropuestaServicioRepository> {PropuestaServicioRepository(get())}
 
+    //Proveedor de PagoServicioRepository
     single<IPagoServicioRepository> {PagoServicioRepository(get())}
 
+    //Proveedor de PropuestaServicioRepository
     single<IPropuestaServicioRepository> {PropuestaServicioRepository(get())}
 
+    //Proveedor de PagoServicioRepository
     single<IEjecucionServicioRepository> {EjecucionServiceRepository(get())}
 
+    //Proveedor de EjecucionServiceRepository
     single<IInspeccionRepository> {InspeccionRepository(get())}
 
+    //Proveedor de DetallePagoRepository
     single<IDetallePagoRepository> {DetallePagoRepository(get())}
 
+    //Proveedor de FotoSolicitudRepository
+    single<IFotoSolicitudRepository> {FotoSolicitudRepository(get())}
+
+    //Proveedor de PagoSocioRepository
+    single<IPagoSocioRepository> {PagoSocioRepository(get())}
+
+    //Proveedor de SolicitudServicioRepository
+    single<ISolicitudServicioRepository> {SolicitudServicioRepository(get())}
 }

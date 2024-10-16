@@ -1,35 +1,34 @@
 package com.example.routes
 
 import com.example.ApiResponse.ApiResponse
-import com.example.DTOs.MetodosPagoDTO
+import com.example.DTOs.FotoSolicitudDTO
 import com.example.Mappers.toDto
-import com.example.Mappers.toMetodosPago
-import com.example.repository.interfaces.IMetodosPagoRepository
+import com.example.Mappers.toFotoSolicitud
+import com.example.repository.interfaces.IFotoSolicitudRepository
 import io.ktor.http.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
+fun Route.fotoSolicitudRouting(_repository : IFotoSolicitudRepository) {
 
-    route("/metodosPago"){
+    route("/fotoSolicitud") {
 
         //--------------------------------------------------------------------------------------------------------------
 
-        //Endpoint para crear metodo de pago
-        post("/crearMetodoPago") {
+        post("/crearFotoSolicitud") {
 
-            val apiResponse = ApiResponse<MetodosPagoDTO>()
+            val apiResponse = ApiResponse<FotoSolicitudDTO>()
 
             try {
 
-                val metodoPagoDTO = call.receive<MetodosPagoDTO>()
-                val metodoPago = metodoPagoDTO.toMetodosPago()
-                val nuevoMetodo = _repository.crearMetodoPago(metodoPago)
-                val responseDTO = nuevoMetodo.toDto()
+                val fotoSolicitudDTO = call.receive<FotoSolicitudDTO>()
+                val fotoSolicitud = fotoSolicitudDTO.toFotoSolicitud()
+                val nuevaFotoSolicitud = _repository.crearFotoSolicitud(fotoSolicitud)
+                val responseDTO = nuevaFotoSolicitud.toDto()
 
                 apiResponse.success = true
-                apiResponse.message = "Metodo de pago creado exitosamente"
+                apiResponse.message = "Foto Solicitud creada exitosamente"
                 apiResponse.data = responseDTO
 
                 call.respond(HttpStatusCode.Created, apiResponse)
@@ -37,7 +36,7 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
             } catch (e: Exception) {
 
                 apiResponse.success = false
-                apiResponse.message = "Error al crear el metodo de pago"
+                apiResponse.message = "Error al crear la Foto Solicitud"
                 apiResponse.errors = listOf(e.message ?: "Error desconocido")
 
                 call.respond(HttpStatusCode.InternalServerError, apiResponse)
@@ -47,21 +46,20 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
 
         //--------------------------------------------------------------------------------------------------------------
 
-        //Endpoint para obtener metodo por cliente
-        get("/obtenerMetodoPagoPorCliente/{idCliente}") {
+        get("/obtenerFotoSolicitudesPorSolicitud/{idSolicitud}") {
 
-            val apiResponse = ApiResponse<List<MetodosPagoDTO>>()
-            val idCliente = call.parameters["idCliente"]
+            val apiResponse = ApiResponse<List<FotoSolicitudDTO>>()
+            val idSolicitud = call.parameters["idSolicitud"]
 
-            if (idCliente != null) {
+            if (idSolicitud != null) {
 
                 try {
 
-                    val metodosPago = _repository.obtenerMetodoPagoPorCliente(idCliente)
-                    val responseDTOs = metodosPago.map { it.toDto() }
+                    val fotoSolicitudes = _repository.obtenerFotoSolicitudesPorSolicitud(idSolicitud)
+                    val responseDTOs = fotoSolicitudes.map { it.toDto() }
 
                     apiResponse.success = true
-                    apiResponse.message = "Metodos de pago obtenidos exitosamente"
+                    apiResponse.message = "Fotos Solicitudes obtenidas exitosamente"
                     apiResponse.data = responseDTOs
 
                     call.respond(HttpStatusCode.OK, apiResponse)
@@ -69,7 +67,7 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
                 } catch (e: Exception) {
 
                     apiResponse.success = false
-                    apiResponse.message = "Error al obtener los metodos de pago"
+                    apiResponse.message = "Error al obtener las Fotos Solicitudes"
                     apiResponse.errors = listOf(e.message ?: "Error desconocido")
 
                     call.respond(HttpStatusCode.InternalServerError, apiResponse)
@@ -78,8 +76,8 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
             } else {
 
                 apiResponse.success = false
-                apiResponse.message = "ID de cliente no proporcionado"
-                apiResponse.errors = listOf("El parámetro 'idCliente' es obligatorio")
+                apiResponse.message = "ID de solicitud no proporcionado"
+                apiResponse.errors = listOf("El parámetro 'idSolicitud' es obligatorio")
 
                 call.respond(HttpStatusCode.BadRequest, apiResponse)
             }
@@ -87,22 +85,21 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
 
         //--------------------------------------------------------------------------------------------------------------
 
-        //Endpoint para obtener metodo por id
-        get("/obtenerMetodoPagoPorId/{idMetodoPago}") {
+        get("/obtenerFotoSolicitudPorId/{idFotoSolicitud}") {
 
-            val apiResponse = ApiResponse<MetodosPagoDTO>()
-            val idMetodoPago = call.parameters["idMetodoPago"]
+            val apiResponse = ApiResponse<FotoSolicitudDTO>()
+            val idFotoSolicitud = call.parameters["idFotoSolicitud"]
 
-            if (idMetodoPago != null) {
+            if (idFotoSolicitud != null) {
 
                 try {
 
-                    val metodoPago = _repository.obtenerMetodoPagoPorId(idMetodoPago)
-                    if (metodoPago != null) {
-                        val responseDTO = metodoPago.toDto()
+                    val fotoSolicitud = _repository.obtenerFotoSolicitudPorId(idFotoSolicitud)
+                    if (fotoSolicitud != null) {
+                        val responseDTO = fotoSolicitud.toDto()
 
                         apiResponse.success = true
-                        apiResponse.message = "Metodo de pago obtenido exitosamente"
+                        apiResponse.message = "Foto Solicitud obtenida exitosamente"
                         apiResponse.data = responseDTO
 
                         call.respond(HttpStatusCode.OK, apiResponse)
@@ -110,15 +107,15 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
                     } else {
 
                         apiResponse.success = false
-                        apiResponse.message = "Metodo de pago no encontrado"
-                        apiResponse.errors = listOf("No existe un metodo de pago con el ID proporcionado")
+                        apiResponse.message = "Foto Solicitud no encontrada"
+                        apiResponse.errors = listOf("No existe una foto con el ID proporcionado")
 
                         call.respond(HttpStatusCode.NotFound, apiResponse)
                     }
                 } catch (e: Exception) {
 
                     apiResponse.success = false
-                    apiResponse.message = "Error al obtener el metodo de pago"
+                    apiResponse.message = "Error al obtener la foto Solicitud"
                     apiResponse.errors = listOf(e.message ?: "Error desconocido")
 
                     call.respond(HttpStatusCode.InternalServerError, apiResponse)
@@ -127,8 +124,8 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
             } else {
 
                 apiResponse.success = false
-                apiResponse.message = "ID de dirección no proporcionado"
-                apiResponse.errors = listOf("El parámetro 'idDireccion' es obligatorio")
+                apiResponse.message = "ID de foto solicitud no proporcionado"
+                apiResponse.errors = listOf("El parámetro 'idFotoSolicitud' es obligatorio")
 
                 call.respond(HttpStatusCode.BadRequest, apiResponse)
             }
@@ -136,35 +133,34 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
 
         //--------------------------------------------------------------------------------------------------------------
 
-        //Endpoint para actualizar metodo de pago
-        put("/actualizarMetodoPago") {
+        put("/actualizarFotoSolicitud") {
 
             val apiResponse = ApiResponse<Unit>()
 
             try {
 
-                val metodoPagoDto = call.receive<MetodosPagoDTO>()
+                val fotoSolicitudDto = call.receive<FotoSolicitudDTO>()
 
-                val id = metodoPagoDto.idMetodoPago
+                val id = fotoSolicitudDto.idFotoSolicitud
 
                 if (id != null) {
 
-                    val metodoPago = metodoPagoDto.toMetodosPago()
+                    val fotoSolicitud = fotoSolicitudDto.toFotoSolicitud()
 
-                    val metodoEditado = _repository.actualizarMetodosPago(id, metodoPago)
+                    val fotoSolicitudEditada = _repository.actualizarFotoSolicitud(id, fotoSolicitud)
 
-                    if (metodoEditado) {
+                    if (fotoSolicitudEditada) {
 
                         apiResponse.success = true
-                        apiResponse.message = "Metodo de pago actualizado"
+                        apiResponse.message = "FotoSolicitud actualizada"
 
                         call.respond(HttpStatusCode.OK, apiResponse)
 
                     } else {
 
                         apiResponse.success = false
-                        apiResponse.message = "Metodo de pago no encontrado"
-                        apiResponse.errors = listOf("No existe un metodo de pago con el ID proporcionado")
+                        apiResponse.message = "FotoSolicitud no encontrada"
+                        apiResponse.errors = listOf("No existe una Foto Solicitud con el ID proporcionado")
 
                         call.respond(HttpStatusCode.NotFound, apiResponse)
                     }
@@ -172,8 +168,8 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
                 } else {
 
                     apiResponse.success = false
-                    apiResponse.message = "ID de metodo de pago no proporcionado"
-                    apiResponse.errors = listOf("No se proporciono ningun id de metodo de pago")
+                    apiResponse.message = "ID de Foto Solicitud no proporcionado"
+                    apiResponse.errors = listOf("No se proporciono ningun id de FotoSolicitud")
 
                     call.respond(HttpStatusCode.BadRequest, apiResponse)
                 }
@@ -181,7 +177,7 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
             } catch (e: Exception){
 
                 apiResponse.success = false
-                apiResponse.message = "Error al actualizar el metodo de pago"
+                apiResponse.message = "Error al actualizar la foto solicitud"
                 apiResponse.errors = listOf(e.message ?: "Error desconocido")
 
                 call.respond(HttpStatusCode.InternalServerError, apiResponse)
@@ -190,8 +186,7 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
 
         //--------------------------------------------------------------------------------------------------------------
 
-        //Endpoint para eliminar metodo de pago
-        delete("/eliminarMetodoPago/{id}") {
+        delete("/eliminarFotoSolicitud/{id}") {
 
             val apiResponse = ApiResponse<Unit>()
 
@@ -201,20 +196,20 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
 
                 try {
 
-                    val eliminado = _repository.eliminarMetodoPago(id)
+                    val eliminado = _repository.eliminarFotoSolicitud(id)
 
                     if (eliminado) {
 
                         apiResponse.success = true
-                        apiResponse.message = "Metodo de pago eliminado"
+                        apiResponse.message = "FotoSolicitud eliminada"
 
                         call.respond(HttpStatusCode.OK, apiResponse)
 
                     } else {
 
                         apiResponse.success = false
-                        apiResponse.message = "Metodo de pago no encontrado"
-                        apiResponse.errors = listOf("No existe un metodo de pago con el ID proporcionado")
+                        apiResponse.message = "FotoSolicitud no encontrada"
+                        apiResponse.errors = listOf("No existe una FotoSolicitud con el ID proporcionado")
 
                         call.respond(HttpStatusCode.NotFound, apiResponse)
                     }
@@ -222,7 +217,7 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
                 } catch (e: Exception){
 
                     apiResponse.success = false
-                    apiResponse.message = "Error al eliminar el metodo de pago"
+                    apiResponse.message = "Error al eliminar la FotoSolicitud"
                     apiResponse.errors = listOf(e.message ?: "Error desconocido")
 
                     call.respond(HttpStatusCode.InternalServerError, apiResponse)
@@ -231,12 +226,13 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
             } else {
 
                 apiResponse.success = false
-                apiResponse.message = "ID metodo de pago no proporcionado"
-                apiResponse.errors = listOf("No se proporciono ningun id de metodo de pago")
+                apiResponse.message = "ID FotoSolicitud no proporcionado"
+                apiResponse.errors = listOf("No se proporciono ningun id de FotoSolicitud")
 
                 call.respond(HttpStatusCode.BadRequest, apiResponse)
             }
         }
 
     }
+
 }

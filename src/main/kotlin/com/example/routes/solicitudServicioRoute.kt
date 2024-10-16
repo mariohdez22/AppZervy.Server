@@ -1,35 +1,34 @@
 package com.example.routes
 
 import com.example.ApiResponse.ApiResponse
-import com.example.DTOs.MetodosPagoDTO
-import com.example.Mappers.toDto
-import com.example.Mappers.toMetodosPago
-import com.example.repository.interfaces.IMetodosPagoRepository
+import com.example.DTOs.SolicitudServicioDTO
+import com.example.Mappers.toDTO
+import com.example.Mappers.toSolicitudServicio
+import com.example.repository.interfaces.ISolicitudServicioRepository
 import io.ktor.http.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
+fun Route.solicitudServicioRouting(_repository : ISolicitudServicioRepository) {
 
-    route("/metodosPago"){
+    route("/solicitudServicio") {
 
         //--------------------------------------------------------------------------------------------------------------
 
-        //Endpoint para crear metodo de pago
-        post("/crearMetodoPago") {
+        post("/crearSolicitudServicio") {
 
-            val apiResponse = ApiResponse<MetodosPagoDTO>()
+            val apiResponse = ApiResponse<SolicitudServicioDTO>()
 
             try {
 
-                val metodoPagoDTO = call.receive<MetodosPagoDTO>()
-                val metodoPago = metodoPagoDTO.toMetodosPago()
-                val nuevoMetodo = _repository.crearMetodoPago(metodoPago)
-                val responseDTO = nuevoMetodo.toDto()
+                val solicitudServicioDTO = call.receive<SolicitudServicioDTO>()
+                val solicitudServicio = solicitudServicioDTO.toSolicitudServicio()
+                val nuevaSolicitudServicio = _repository.crearSolicitudServicio(solicitudServicio)
+                val responseDTO = nuevaSolicitudServicio.toDTO()
 
                 apiResponse.success = true
-                apiResponse.message = "Metodo de pago creado exitosamente"
+                apiResponse.message = "Solicitud creada exitosamente"
                 apiResponse.data = responseDTO
 
                 call.respond(HttpStatusCode.Created, apiResponse)
@@ -37,7 +36,7 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
             } catch (e: Exception) {
 
                 apiResponse.success = false
-                apiResponse.message = "Error al crear el metodo de pago"
+                apiResponse.message = "Error al crear la Solicitud"
                 apiResponse.errors = listOf(e.message ?: "Error desconocido")
 
                 call.respond(HttpStatusCode.InternalServerError, apiResponse)
@@ -47,21 +46,20 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
 
         //--------------------------------------------------------------------------------------------------------------
 
-        //Endpoint para obtener metodo por cliente
-        get("/obtenerMetodoPagoPorCliente/{idCliente}") {
+        get("/obtenerSolicitudServicioPorCliente/{idCliente}") {
 
-            val apiResponse = ApiResponse<List<MetodosPagoDTO>>()
+            val apiResponse = ApiResponse<List<SolicitudServicioDTO>>()
             val idCliente = call.parameters["idCliente"]
 
             if (idCliente != null) {
 
                 try {
 
-                    val metodosPago = _repository.obtenerMetodoPagoPorCliente(idCliente)
-                    val responseDTOs = metodosPago.map { it.toDto() }
+                    val solicitudServicio = _repository.obtenerSolicitudServicioPorCliente(idCliente)
+                    val responseDTOs = solicitudServicio.map { it.toDTO() }
 
                     apiResponse.success = true
-                    apiResponse.message = "Metodos de pago obtenidos exitosamente"
+                    apiResponse.message = "SolicitudServicios obtenidas exitosamente"
                     apiResponse.data = responseDTOs
 
                     call.respond(HttpStatusCode.OK, apiResponse)
@@ -69,7 +67,7 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
                 } catch (e: Exception) {
 
                     apiResponse.success = false
-                    apiResponse.message = "Error al obtener los metodos de pago"
+                    apiResponse.message = "Error al obtener las SolicitudServicios"
                     apiResponse.errors = listOf(e.message ?: "Error desconocido")
 
                     call.respond(HttpStatusCode.InternalServerError, apiResponse)
@@ -87,22 +85,21 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
 
         //--------------------------------------------------------------------------------------------------------------
 
-        //Endpoint para obtener metodo por id
-        get("/obtenerMetodoPagoPorId/{idMetodoPago}") {
+        get("/obtenerSolicitudServicioPorId/{idSolicitudServicio}") {
 
-            val apiResponse = ApiResponse<MetodosPagoDTO>()
-            val idMetodoPago = call.parameters["idMetodoPago"]
+            val apiResponse = ApiResponse<SolicitudServicioDTO>()
+            val idSolicitud = call.parameters["idSolicitud"]
 
-            if (idMetodoPago != null) {
+            if (idSolicitud != null) {
 
                 try {
 
-                    val metodoPago = _repository.obtenerMetodoPagoPorId(idMetodoPago)
-                    if (metodoPago != null) {
-                        val responseDTO = metodoPago.toDto()
+                    val solicitudServicio = _repository.obtenerSolicitudServicioPorId(idSolicitud)
+                    if (solicitudServicio != null) {
+                        val responseDTO = solicitudServicio.toDTO()
 
                         apiResponse.success = true
-                        apiResponse.message = "Metodo de pago obtenido exitosamente"
+                        apiResponse.message = "Solicitud Servicio obtenida exitosamente"
                         apiResponse.data = responseDTO
 
                         call.respond(HttpStatusCode.OK, apiResponse)
@@ -110,15 +107,15 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
                     } else {
 
                         apiResponse.success = false
-                        apiResponse.message = "Metodo de pago no encontrado"
-                        apiResponse.errors = listOf("No existe un metodo de pago con el ID proporcionado")
+                        apiResponse.message = "Solicitud Servicio no encontrada"
+                        apiResponse.errors = listOf("No existe una Solicitud Servicio con el ID proporcionado")
 
                         call.respond(HttpStatusCode.NotFound, apiResponse)
                     }
                 } catch (e: Exception) {
 
                     apiResponse.success = false
-                    apiResponse.message = "Error al obtener el metodo de pago"
+                    apiResponse.message = "Error al obtener la Solicitud Servicio"
                     apiResponse.errors = listOf(e.message ?: "Error desconocido")
 
                     call.respond(HttpStatusCode.InternalServerError, apiResponse)
@@ -127,8 +124,8 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
             } else {
 
                 apiResponse.success = false
-                apiResponse.message = "ID de dirección no proporcionado"
-                apiResponse.errors = listOf("El parámetro 'idDireccion' es obligatorio")
+                apiResponse.message = "ID de Solicitud Servicio no proporcionado"
+                apiResponse.errors = listOf("El parámetro 'idSolicitudServicio' es obligatorio")
 
                 call.respond(HttpStatusCode.BadRequest, apiResponse)
             }
@@ -136,35 +133,34 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
 
         //--------------------------------------------------------------------------------------------------------------
 
-        //Endpoint para actualizar metodo de pago
-        put("/actualizarMetodoPago") {
+        put("/actualizarSolicitudServicio") {
 
             val apiResponse = ApiResponse<Unit>()
 
             try {
 
-                val metodoPagoDto = call.receive<MetodosPagoDTO>()
+                val solicitudServicioDto = call.receive<SolicitudServicioDTO>()
 
-                val id = metodoPagoDto.idMetodoPago
+                val id = solicitudServicioDto.idSolicitud
 
                 if (id != null) {
 
-                    val metodoPago = metodoPagoDto.toMetodosPago()
+                    val solicitudServicio = solicitudServicioDto.toSolicitudServicio()
 
-                    val metodoEditado = _repository.actualizarMetodosPago(id, metodoPago)
+                    val solicitudServicioEditada = _repository.actualizarSolicitudServicio(id, solicitudServicio)
 
-                    if (metodoEditado) {
+                    if (solicitudServicioEditada) {
 
                         apiResponse.success = true
-                        apiResponse.message = "Metodo de pago actualizado"
+                        apiResponse.message = "SolicitudServicio actualizada"
 
                         call.respond(HttpStatusCode.OK, apiResponse)
 
                     } else {
 
                         apiResponse.success = false
-                        apiResponse.message = "Metodo de pago no encontrado"
-                        apiResponse.errors = listOf("No existe un metodo de pago con el ID proporcionado")
+                        apiResponse.message = "SolicitudServicio no encontrada"
+                        apiResponse.errors = listOf("No existe una SolicitudServicio con el ID proporcionado")
 
                         call.respond(HttpStatusCode.NotFound, apiResponse)
                     }
@@ -172,8 +168,8 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
                 } else {
 
                     apiResponse.success = false
-                    apiResponse.message = "ID de metodo de pago no proporcionado"
-                    apiResponse.errors = listOf("No se proporciono ningun id de metodo de pago")
+                    apiResponse.message = "ID de SolicitudServicio no proporcionado"
+                    apiResponse.errors = listOf("No se proporciono ningun id de Solicitud Servicio")
 
                     call.respond(HttpStatusCode.BadRequest, apiResponse)
                 }
@@ -181,7 +177,7 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
             } catch (e: Exception){
 
                 apiResponse.success = false
-                apiResponse.message = "Error al actualizar el metodo de pago"
+                apiResponse.message = "Error al actualizar la Solicitud de Servicio"
                 apiResponse.errors = listOf(e.message ?: "Error desconocido")
 
                 call.respond(HttpStatusCode.InternalServerError, apiResponse)
@@ -190,8 +186,7 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
 
         //--------------------------------------------------------------------------------------------------------------
 
-        //Endpoint para eliminar metodo de pago
-        delete("/eliminarMetodoPago/{id}") {
+        delete("/eliminarSolicitudServicio/{id}") {
 
             val apiResponse = ApiResponse<Unit>()
 
@@ -201,20 +196,20 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
 
                 try {
 
-                    val eliminado = _repository.eliminarMetodoPago(id)
+                    val eliminado = _repository.eliminarSolicitudServicio(id)
 
                     if (eliminado) {
 
                         apiResponse.success = true
-                        apiResponse.message = "Metodo de pago eliminado"
+                        apiResponse.message = "SolicitudServicio eliminada"
 
                         call.respond(HttpStatusCode.OK, apiResponse)
 
                     } else {
 
                         apiResponse.success = false
-                        apiResponse.message = "Metodo de pago no encontrado"
-                        apiResponse.errors = listOf("No existe un metodo de pago con el ID proporcionado")
+                        apiResponse.message = "SolicitudServicio no encontrada"
+                        apiResponse.errors = listOf("No existe una SolicitudServicio con el ID proporcionado")
 
                         call.respond(HttpStatusCode.NotFound, apiResponse)
                     }
@@ -222,7 +217,7 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
                 } catch (e: Exception){
 
                     apiResponse.success = false
-                    apiResponse.message = "Error al eliminar el metodo de pago"
+                    apiResponse.message = "Error al eliminar la SolicitudServicio"
                     apiResponse.errors = listOf(e.message ?: "Error desconocido")
 
                     call.respond(HttpStatusCode.InternalServerError, apiResponse)
@@ -231,8 +226,8 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
             } else {
 
                 apiResponse.success = false
-                apiResponse.message = "ID metodo de pago no proporcionado"
-                apiResponse.errors = listOf("No se proporciono ningun id de metodo de pago")
+                apiResponse.message = "ID SolicitudServicio no proporcionado"
+                apiResponse.errors = listOf("No se proporciono ningun id de SolicitudServicio")
 
                 call.respond(HttpStatusCode.BadRequest, apiResponse)
             }

@@ -1,8 +1,5 @@
 package com.example.plugins
 
-import com.example.repository.clases.DetallePagoRepository
-import com.example.models.PropuestaServicio
-import com.example.repository.clases.FotoSolicitudRepository
 import com.example.repository.interfaces.*
 import com.example.routes.*
 import com.example.repository.interfaces.IClienteRepostory

@@ -37,7 +37,7 @@ class PropuestaServicioRepository(
         }
 
         val solicitudDoc = propuesta.idSolicitud?.let {
-            firestore.collection("socios").document(it).get().await()
+            firestore.collection("solicitudServicio").document(it).get().await()
         }
 
         if (socioDoc != null) {
@@ -56,21 +56,21 @@ class PropuestaServicioRepository(
             }
         }
 
-        val docRef = firestore.collection("propuestaservicios").document()
+        val docRef = firestore.collection("propuestaServicio").document()
         val nuevaPropuesta = propuesta.copy(idPropuesta = docRef.id)
         docRef.set(nuevaPropuesta).await()
         return nuevaPropuesta
     }
 
     override suspend fun obtenerPropuestaServicio(): List<PropuestaServicio> {
-        val snapShot = firestore.collection("propuestaservicios").get().await()
+        val snapShot = firestore.collection("propuestaServicio").get().await()
         return snapShot.documents.mapNotNull { document ->
             document.toObject(PropuestaServicio::class.java)
         }
     }
 
     override suspend fun obtenerPropuestaServicioPorSocio(idSocio: String): List<PropuestaServicio> {
-        val snapshot = firestore.collection("propuestaservicios")
+        val snapshot = firestore.collection("propuestaServicio")
             .whereEqualTo("idSocio", idSocio)
             .get()
             .await()
@@ -81,7 +81,7 @@ class PropuestaServicioRepository(
     }
 
     override suspend fun obtenerPropuestaServicioPorSolicitud(idSolicitud: String): List<PropuestaServicio> {
-        val snapshot = firestore.collection("propuestaservicios")
+        val snapshot = firestore.collection("propuestaServicio")
             .whereEqualTo("idSolicitud", idSolicitud)
             .get()
             .await()
@@ -92,7 +92,7 @@ class PropuestaServicioRepository(
     }
 
     override suspend fun obtenerPropuestaServicioPorId(id: String): PropuestaServicio? {
-        val doc = firestore.collection("propuestaservicios").document(id).get().await()
+        val doc = firestore.collection("propuestaServicio").document(id).get().await()
         return if (doc.exists()){
             doc.toObject(PropuestaServicio::class.java)
         }else{
@@ -101,14 +101,14 @@ class PropuestaServicioRepository(
     }
 
     override suspend fun actualizarPropuestaServicio(id: String, propuesta: PropuestaServicio): Boolean {
-        val docRef = firestore.collection("propuestaservicios").document(id)
+        val docRef = firestore.collection("propuestaServicio").document(id)
         val updatePropuesta = propuesta.copy(idPropuesta = docRef.id)
         docRef.set(updatePropuesta).await()
         return true
     }
 
     override suspend fun eliminarPropuestaServicio(id: String): Boolean {
-        firestore.collection("propuestaservicios").document(id).delete().await()
+        firestore.collection("propuestaServicio").document(id).delete().await()
         return true
     }
 

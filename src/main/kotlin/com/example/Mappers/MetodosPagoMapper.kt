@@ -8,6 +8,7 @@ fun MetodosPagoDTO.toMetodosPago(): MetodosPago {
     return MetodosPago(
         idMetodoPago = this.idMetodoPago ?: "",
         idCliente = this.idCliente ?: "",
+        idSocio = this.idSocio ?: "",
         idDireccion = this.idDireccion ?: "",
         tipoMetodo = this.tipoMetodo,
         aliasTarjeta = this.aliasTarjeta,
@@ -23,6 +24,7 @@ fun MetodosPago.toDto(): MetodosPagoDTO {
     return MetodosPagoDTO(
         idMetodoPago = this.idMetodoPago ?: "",
         idCliente = this.idCliente ?: "",
+        idSocio = this.idSocio ?: "",
         idDireccion = this.idDireccion ?: "",
         tipoMetodo = this.tipoMetodo,
         aliasTarjeta = this.aliasTarjeta,

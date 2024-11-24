@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 data class Direccion(
     val idDireccion: String? = null,
     val idCliente: String? = null,
+    val idSocio: String? = null,
     val direccion1: String = "",
     val direccion2: String = "",
     val numResidencia: String = "",

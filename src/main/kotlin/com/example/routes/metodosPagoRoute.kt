@@ -238,5 +238,63 @@ fun Route.metodosPagoRouting(_repository: IMetodosPagoRepository) {
             }
         }
 
+
+        //Endpoint para actualizar metodo de pago asociado a cliente y socio
+        put("/actualizarMetodoPagoSocio") {
+
+            val apiResponse = ApiResponse<MetodosPagoDTO>()
+
+            try {
+                val metodoPagoDto = call.receive<MetodosPagoDTO>()
+
+                // Validar IDs necesarios
+                val idMetodoPago = metodoPagoDto.idMetodoPago
+                val idSocio = metodoPagoDto.idSocio
+                val idCliente = metodoPagoDto.idCliente
+
+                if (idMetodoPago == null || idSocio == null || idCliente == null) {
+                    apiResponse.success = false
+                    apiResponse.message = "IDs faltantes"
+                    apiResponse.errors = listOf(
+                        "ID de método de pago, cliente y socio son obligatorios"
+                    )
+                    call.respond(HttpStatusCode.BadRequest, apiResponse)
+                    return@put
+                }
+
+                // Convertir DTO a modelo
+                val metodoPago = metodoPagoDto.toMetodosPago()
+
+                // Actualizar el método de pago existente
+                val metodoActualizadoCliente = _repository.actualizarMetodosPago(idMetodoPago, metodoPago)
+
+                if (!metodoActualizadoCliente) {
+                    apiResponse.success = false
+                    apiResponse.message = "No se pudo actualizar el método de pago para el cliente"
+                    apiResponse.errors = listOf("El método de pago con ID $idMetodoPago no existe")
+                    call.respond(HttpStatusCode.NotFound, apiResponse)
+                    return@put
+                }
+
+                // Asociar el método de pago al socio
+                val metodoActualizadoSocio = _repository.agregarMetodoPagoPorSocio(idSocio, metodoPago)
+
+                val responseDTO = metodoActualizadoSocio.toDto()
+
+                apiResponse.success = true
+                apiResponse.message = "Método de pago actualizado exitosamente para cliente y socio"
+                apiResponse.data = responseDTO
+
+                call.respond(HttpStatusCode.OK, apiResponse)
+
+            } catch (e: Exception) {
+
+                apiResponse.success = false
+                apiResponse.message = "Error al actualizar el método de pago para cliente y socio"
+                apiResponse.errors = listOf(e.message ?: "Error desconocido")
+                call.respond(HttpStatusCode.InternalServerError, apiResponse)
+            }
+        }
+
     }
 }

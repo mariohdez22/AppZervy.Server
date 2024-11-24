@@ -30,12 +30,9 @@ class DireccionRepository(private val firestore: Firestore) : IDireccionReposito
     }
 
     override suspend fun crearDireccion(direccion: Direccion): Direccion {
-
         val clienteDoc = direccion.idCliente?.let { firestore.collection("clientes").document(it).get().await() }
-        if (clienteDoc != null) {
-            if (!clienteDoc.exists()) {
-                throw IllegalArgumentException("El cliente con ID ${direccion.idCliente} no existe")
-            }
+        if (clienteDoc != null && !clienteDoc.exists()) {
+            throw IllegalArgumentException("El cliente con ID ${direccion.idCliente} no existe")
         }
 
         val docRef = firestore.collection("direcciones").document()
@@ -45,7 +42,6 @@ class DireccionRepository(private val firestore: Firestore) : IDireccionReposito
     }
 
     override suspend fun obtenerDireccionesPorCliente(idCliente: String): List<Direccion> {
-
         val snapshot = firestore.collection("direcciones")
             .whereEqualTo("idCliente", idCliente)
             .get()
@@ -57,7 +53,6 @@ class DireccionRepository(private val firestore: Firestore) : IDireccionReposito
     }
 
     override suspend fun obtenerDireccionPorId(idDireccion: String): Direccion? {
-
         val doc = firestore.collection("direcciones").document(idDireccion).get().await()
         return if (doc.exists()) {
             doc.toObject(Direccion::class.java)?.copy(idDireccion = doc.id)
@@ -67,17 +62,35 @@ class DireccionRepository(private val firestore: Firestore) : IDireccionReposito
     }
 
     override suspend fun actualizarDireccion(idDireccion: String, direccion: Direccion): Boolean {
-
         val docRef = firestore.collection("direcciones").document(idDireccion)
         docRef.set(direccion).await()
         return true
     }
 
     override suspend fun eliminarDireccion(idDireccion: String): Boolean {
-
         firestore.collection("direcciones").document(idDireccion).delete().await()
         return true
     }
 
+    // Nueva función para agregar dirección por socio
+    override suspend fun agregarDireccionPorSocio(idSocio: String, direccion: Direccion): Direccion {
+        // Verificar que el socio exista
+        val socioDoc = firestore.collection("socios").document(idSocio).get().await()
+        if (!socioDoc.exists()) {
+            throw IllegalArgumentException("El socio con ID $idSocio no existe")
+        }
 
+        // Asociar el ID del socio a la dirección
+        val direccionConSocio = direccion.copy(idSocio = idSocio)
+
+        // Guardar o actualizar la dirección en Firestore
+        val docRef = direccionConSocio.idDireccion?.let {
+            firestore.collection("direcciones").document(it)
+        } ?: firestore.collection("direcciones").document()
+
+        val nuevaDireccion = direccionConSocio.copy(idDireccion = docRef.id)
+        docRef.set(nuevaDireccion).await()
+
+        return nuevaDireccion
+    }
 }

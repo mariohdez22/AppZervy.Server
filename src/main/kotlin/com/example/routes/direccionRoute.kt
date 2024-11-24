@@ -233,5 +233,57 @@ fun Route.direccionRouting(_repository: IDireccionRepository){
             }
         }
 
+        //--------------------------------------------------------------------------------------------------------------
+
+        put("/actualizarDireccionSocio") {
+
+            val apiResponse = ApiResponse<DireccionDTO>()
+
+            try {
+
+                val direccionDto = call.receive<DireccionDTO>()
+
+                // Validar IDs necesarios
+                val idDireccion = direccionDto.idDireccion
+                val idSocio = direccionDto.idSocio
+                val idCliente = direccionDto.idCliente
+
+                if (idDireccion == null || idSocio == null || idCliente == null) {
+                    apiResponse.success = false
+                    apiResponse.message = "IDs faltantes"
+                    apiResponse.errors = listOf(
+                        "ID de dirección, cliente y socio son obligatorios"
+                    )
+                    call.respond(HttpStatusCode.BadRequest, apiResponse)
+                    return@put
+                }
+
+                // Convertir DTO a modelo
+                val direccion = direccionDto.toDireccion()
+
+                // Verificar y actualizar la dirección para el socio
+                val direccionActualizada = _repository.agregarDireccionPorSocio(idSocio, direccion)
+
+                // Actualizar la dirección para el cliente si aplica
+                _repository.actualizarDireccion(idDireccion, direccionActualizada)
+
+                val responseDTO = direccionActualizada.toDto()
+
+                apiResponse.success = true
+                apiResponse.message = "Dirección actualizada exitosamente para cliente y socio"
+                apiResponse.data = responseDTO
+
+                call.respond(HttpStatusCode.OK, apiResponse)
+
+            } catch (e: Exception) {
+
+                apiResponse.success = false
+                apiResponse.message = "Error al actualizar la dirección para cliente y socio"
+                apiResponse.errors = listOf(e.message ?: "Error desconocido")
+
+                call.respond(HttpStatusCode.InternalServerError, apiResponse)
+            }
+        }
+
     }
 }

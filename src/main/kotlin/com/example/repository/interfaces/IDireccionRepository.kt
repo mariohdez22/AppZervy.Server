@@ -9,4 +9,7 @@ interface IDireccionRepository {
     suspend fun obtenerDireccionPorId(idDireccion: String): Direccion?
     suspend fun actualizarDireccion(idDireccion: String, direccion: Direccion): Boolean
     suspend fun eliminarDireccion(idDireccion: String): Boolean
+
+    // Nueva función para agregar dirección por Socio
+    suspend fun agregarDireccionPorSocio(idSocio: String, direccion: Direccion): Direccion
 }

@@ -9,4 +9,7 @@ interface IMetodosPagoRepository {
     suspend fun obtenerMetodoPagoPorId(idMetodoPago: String): MetodosPago?
     suspend fun actualizarMetodosPago(idMetodoPago: String, metodosPago: MetodosPago): Boolean
     suspend fun eliminarMetodoPago(idMetodoPago: String): Boolean
+
+    // Nueva función para agregar método de pago por socio
+    suspend fun agregarMetodoPagoPorSocio(idSocio: String, metodosPago: MetodosPago): MetodosPago
 }

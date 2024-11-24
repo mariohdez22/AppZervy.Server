@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 data class MetodosPago(
     val idMetodoPago: String? = null,
     val idCliente: String? = null,
+    val idSocio: String? = null,
     val idDireccion : String? = null,
     val tipoMetodo: String = "",
     val aliasTarjeta: String = "",

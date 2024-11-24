@@ -79,5 +79,27 @@ class MetodosPagoRepository(private val firestore: Firestore) : IMetodosPagoRepo
         return true
     }
 
+    // Nueva función para agregar metodo de pago por socio
+    override suspend fun agregarMetodoPagoPorSocio(idSocio: String, metodosPago: MetodosPago): MetodosPago {
+        // Verificar que el socio exista
+        val socioDoc = firestore.collection("socios").document(idSocio).get().await()
+        if (!socioDoc.exists()) {
+            throw IllegalArgumentException("El socio con ID $idSocio no existe")
+        }
+
+        // Asociar el ID del socio al método de pago
+        val metodoConSocio = metodosPago.copy(idSocio = idSocio)
+
+        // Guardar o actualizar el método de pago en Firestore
+        val docRef = metodoConSocio.idMetodoPago?.let {
+            firestore.collection("metodospago").document(it)
+        } ?: firestore.collection("metodospago").document()
+
+        val nuevoMetodoPago = metodoConSocio.copy(idMetodoPago = docRef.id)
+        docRef.set(nuevoMetodoPago).await()
+
+        return nuevoMetodoPago
+    }
+
 
 }

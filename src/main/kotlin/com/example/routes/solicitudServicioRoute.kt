@@ -9,6 +9,7 @@ import io.ktor.http.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.apache.commons.logging.Log
 
 fun Route.solicitudServicioRouting(_repository : ISolicitudServicioRepository) {
 
@@ -23,6 +24,8 @@ fun Route.solicitudServicioRouting(_repository : ISolicitudServicioRepository) {
             try {
 
                 val solicitudServicioDTO = call.receive<SolicitudServicioDTO>()
+                println("----------------------------------------------------------------------")
+                println(solicitudServicioDTO)
                 val solicitudServicio = solicitudServicioDTO.toSolicitudServicio()
                 val nuevaSolicitudServicio = _repository.crearSolicitudServicio(solicitudServicio)
                 val responseDTO = nuevaSolicitudServicio.toDTO()
